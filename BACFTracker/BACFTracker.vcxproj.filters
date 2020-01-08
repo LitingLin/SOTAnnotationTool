@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\cn">
+      <UniqueIdentifier>{b8a73567-5e60-479a-a1c1-db8457e008c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cn">
+      <UniqueIdentifier>{6fb24c0e-2946-4504-8163-83bc4cd78285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\piotr_fhog">
+      <UniqueIdentifier>{0275c567-57d5-4a89-836a-feab1b5495c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\piotr_fhog">
+      <UniqueIdentifier>{e5692eeb-b5b7-4b77-9026-6a47e45b4d87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="exports.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="kcf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="complexmat.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cn\cnfeat.hpp">
+      <Filter>Header Files\cn</Filter>
+    </ClInclude>
+    <ClInclude Include="piotr_fhog\sse.hpp">
+      <Filter>Header Files\piotr_fhog</Filter>
+    </ClInclude>
+    <ClInclude Include="piotr_fhog\wrappers.hpp">
+      <Filter>Header Files\piotr_fhog</Filter>
+    </ClInclude>
+    <ClInclude Include="piotr_fhog\fhog.hpp">
+      <Filter>Header Files\piotr_fhog</Filter>
+    </ClInclude>
+    <ClInclude Include="piotr_fhog\gradientMex.h">
+      <Filter>Header Files\piotr_fhog</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="kcf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="exports.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cn\cn_data.cpp">
+      <Filter>Source Files\cn</Filter>
+    </ClCompile>
+    <ClCompile Include="piotr_fhog\gradientMex.cpp">
+      <Filter>Source Files\piotr_fhog</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

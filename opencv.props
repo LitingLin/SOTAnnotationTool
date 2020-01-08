@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <OpenCVPATH>C:\Program Files (x86)\IntelSWTools\openvino\opencv\</OpenCVPATH>
+    <OpenCVVersion>412</OpenCVVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LocalDebuggerEnvironment>PATH=$(OpenCVPATH)bin;%PATH%
+</LocalDebuggerEnvironment>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OpenCVPATH)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions></PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(OpenVINOInferenceEnginePATH)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">opencv_core$(OpenCVVersion)d.lib;opencv_imgcodecs$(OpenCVVersion)d.lib;opencv_highgui$(OpenCVVersion)d.lib;opencv_imgproc$(OpenCVVersion)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">opencv_core$(OpenCVVersion).lib;opencv_imgcodecs$(OpenCVVersion).lib;opencv_highgui$(OpenCVVersion).lib;opencv_imgproc$(OpenCVVersion).lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="OpenVINOInferenceEnginePATH">
+      <Value>$(OpenVINOInferenceEnginePATH)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
