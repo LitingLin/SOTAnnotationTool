@@ -54,29 +54,30 @@
     <ClCompile>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\BACFTracker\;$(ProjectDir)..\AnnotationRecordOperator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\BACFTracker\include;$(ProjectDir)..\AnnotationRecordOperator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>BACFTracker.lib;AnnotationRecordOperator.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    <ProjectReference />
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\BACFTracker\;$(ProjectDir)..\AnnotationRecordOperator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\BACFTracker\include;$(ProjectDir)..\AnnotationRecordOperator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <AdditionalDependencies>BACFTracker.lib;AnnotationRecordOperator.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    <ProjectReference />
+    <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="managed_annotation_record_operator.h" />
+    <ClInclude Include="managed_tracker.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="managed_annotaion_record_operator.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="managed_tracker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
@@ -85,8 +86,14 @@
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AnnotationRecordOperator\AnnotationRecordOperator.vcxproj">
+      <Project>{55054a5b-4921-4473-b968-8f7790f89028}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\AnnotationTool.Data.Model\AnnotationTool.Data.Model.csproj">
       <Project>{ce12f411-79cc-44b0-878e-14e695bd30b3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\BACFTracker\BACFTracker.vcxproj">
+      <Project>{d2afa27b-73b6-486d-9d41-dbcc8aee22d3}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

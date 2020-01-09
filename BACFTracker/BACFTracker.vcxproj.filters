@@ -25,11 +25,11 @@
     <Filter Include="Source Files\piotr_fhog">
       <UniqueIdentifier>{e5692eeb-b5b7-4b77-9026-6a47e45b4d87}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\include">
+      <UniqueIdentifier>{b7dcb5c0-63dd-4465-9a0a-9fa7d49a8002}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="exports.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="kcf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -51,12 +51,12 @@
     <ClInclude Include="piotr_fhog\gradientMex.h">
       <Filter>Header Files\piotr_fhog</Filter>
     </ClInclude>
+    <ClInclude Include="include\bacf_tracker.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="kcf.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="exports.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cn\cn_data.cpp">
@@ -64,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="piotr_fhog\gradientMex.cpp">
       <Filter>Source Files\piotr_fhog</Filter>
+    </ClCompile>
+    <ClCompile Include="bacf_tracker_interface.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

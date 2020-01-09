@@ -1,22 +1,10 @@
 #include "managed_annotation_record_operator.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <msclr/marshal.h>
-#include <msclr/marshal_cppstd.h>
+#include <annotation_record_operation.h>
+
+#include "utils.h"
 
 #include <fmt/format.h>
-
-#define EXCEPTION_SAFE_EXECUTION_BEGIN try \
-	{
-#define EXCEPTION_SAFE_EXECUTION_END } \
-catch (std::exception & exp) \
-{ \
-	throw gcnew System::Exception(msclr::interop::marshal_as<String^>(exp.what())); \
-} \
-catch (...) \
-{ \
-	throw gcnew System::Exception(); \
-}
 
 namespace AnnotationTool {
 	namespace NativeInteropServices {
@@ -31,7 +19,7 @@ namespace AnnotationTool {
 		size_t AnnotationRecordOperator::Length()
 		{
 			EXCEPTION_SAFE_EXECUTION_BEGIN
-			return _annotationOperator->getNumberOfRecords();
+			return _annotationOperator->size();
 			EXCEPTION_SAFE_EXECUTION_END
 		}
 
@@ -47,8 +35,8 @@ namespace AnnotationTool {
 				throw gcnew System::Exception(msclr::interop::marshal_as<String^>(fmt::format(L"Failed to get record, index: {}", index)));
 			AnnotationTool::Data::Model::AnnotationRecord^ record = gcnew AnnotationTool::Data::Model::AnnotationRecord;
 			record->IsLabeled = labeled;
-			record->X = x;
-			record->Y = y;
+			record->X = x - 1;
+			record->Y = y - 1;
 			record->W = w;
 			record->H = h;
 			record->IsFullyOccluded = occlusion;
@@ -63,7 +51,7 @@ namespace AnnotationTool {
 		{
 			EXCEPTION_SAFE_EXECUTION_BEGIN
 			System::String^ managedPath = record->Path;
-			_annotationOperator->update(index, index + 1, record->IsLabeled, record->X, record->Y, record->W, record->H, record->IsFullyOccluded, record->IsOutOfView,msclr::interop::marshal_as<std::wstring>(managedPath));
+			_annotationOperator->set(index, index + 1, record->IsLabeled, record->X + 1, record->Y + 1, record->W, record->H, record->IsFullyOccluded, record->IsOutOfView,msclr::interop::marshal_as<std::wstring>(managedPath));
 			EXCEPTION_SAFE_EXECUTION_END
 		}
 

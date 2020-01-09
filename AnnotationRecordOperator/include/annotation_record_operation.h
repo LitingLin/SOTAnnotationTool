@@ -34,9 +34,9 @@ public:
 	AnnotationRecordOperator(const AnnotationRecordOperator &) = delete;
 	AnnotationRecordOperator(AnnotationRecordOperator &&) = delete;
 	~AnnotationRecordOperator() noexcept(false);
-	size_t getNumberOfRecords() const;
+	size_t size() const;
 	bool get(size_t index, int *id, bool *labeled, int *x, int *y, int *w, int *h, bool *occlusion, bool *outOfView, std::wstring *path) const;
-	void update(size_t index, int id, bool labeled, int x, int y, int w, int h, bool occlusion, bool outOfView, const std::wstring &path);
+	void set(size_t index, int id, bool labeled, int x, int y, int w, int h, bool occlusion, bool outOfView, const std::wstring &path);
 	void resize(size_t n);
 private:
 	MATFile * _matFile;

@@ -2,12 +2,14 @@
 
 using namespace System;
 
-#include <annotation_record_operation.h>
+class AnnotationRecordOperator;
+#include <cstdint>
 
 namespace AnnotationTool {
 	namespace NativeInteropServices {
 		public ref class AnnotationRecordOperator
 		{
+		public:
 			enum class DesiredAccess : uint32_t
 			{
 				Read,
@@ -19,7 +21,6 @@ namespace AnnotationTool {
 				OpenAlways,
 				CreateAlways
 			};
-		public:
 			AnnotationRecordOperator(System::String^ path, DesiredAccess desiredAccess, CreationDisposition creationDisposition);
 			size_t Length();
 			AnnotationTool::Data::Model::AnnotationRecord^ Get(size_t index);

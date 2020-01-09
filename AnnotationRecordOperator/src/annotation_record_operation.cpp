@@ -38,7 +38,7 @@ AnnotationRecordOperator::~AnnotationRecordOperator() noexcept(false)
 		if (error) {
 			if (_variable) mxDestroyArray((mxArray*)_variable);
 			if (_matFile) matClose(_matFile);
-			if (std::uncaught_exception()) {
+			if (std::uncaught_exceptions()) {
 			}
 			else {
 				if (error != 0)
@@ -51,7 +51,7 @@ AnnotationRecordOperator::~AnnotationRecordOperator() noexcept(false)
 	if (_variable)
 		mxDestroyArray((mxArray*)_variable);
 	const matError error = matClose(_matFile);
-	if (std::uncaught_exception()) {
+	if (std::uncaught_exceptions()) {
 	}
 	else {
 		if (error != 0)
@@ -59,7 +59,7 @@ AnnotationRecordOperator::~AnnotationRecordOperator() noexcept(false)
 	}
 }
 
-size_t AnnotationRecordOperator::getNumberOfRecords() const
+size_t AnnotationRecordOperator::size() const
 {
 	if (_variable)
 		return mxGetNumberOfElements((mxArray*)_variable);
@@ -104,7 +104,7 @@ bool AnnotationRecordOperator::get(size_t index, int* id, bool* labeled, int* x,
 	return true;
 }
 
-void AnnotationRecordOperator::update(size_t index, int id, bool labeled, int x, int y, int w, int h, bool occlusion,
+void AnnotationRecordOperator::set(size_t index, int id, bool labeled, int x, int y, int w, int h, bool occlusion,
 	bool outOfView, const std::wstring& path)
 {
 	mxArray* pa = (mxArray*)_variable;

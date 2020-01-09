@@ -12,17 +12,16 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(OpenCVPATH)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions></PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(OpenVINOInferenceEnginePATH)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OpenCVPATH)lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">opencv_core$(OpenCVVersion)d.lib;opencv_imgcodecs$(OpenCVVersion)d.lib;opencv_highgui$(OpenCVVersion)d.lib;opencv_imgproc$(OpenCVVersion)d.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">opencv_core$(OpenCVVersion).lib;opencv_imgcodecs$(OpenCVVersion).lib;opencv_highgui$(OpenCVVersion).lib;opencv_imgproc$(OpenCVVersion).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <BuildMacro Include="OpenVINOInferenceEnginePATH">
-      <Value>$(OpenVINOInferenceEnginePATH)</Value>
+    <BuildMacro Include="OpenCVPATH">
+      <Value>$(OpenCVPATH)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
