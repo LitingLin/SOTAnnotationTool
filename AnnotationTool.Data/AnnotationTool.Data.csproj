@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AnnotationTool.Data.Model\AnnotationTool.Data.Model.csproj" />
     <ProjectReference Include="..\AnnotationTool.NativeInteropServices\AnnotationTool.NativeInteropServices.vcxproj" />
+    <ProjectReference Include="..\AnnotationTool.Resources\AnnotationTool.Resources.csproj" />
   </ItemGroup>
 
 </Project>
