@@ -24,19 +24,20 @@ namespace AnnotationTool.Data
 
             private Transaction(AnnotationRecordCachePersistentProvider provider)
             {
+                _provider = provider;
                 _db = provider._db;
                 _size = provider._size;
                 _writeOptions = provider._writeOptions;
                 _batch = new WriteBatch();
             }
 
-            public void Push(AnnotationRecord record)
+            public void Push(AnnotationRecordCache record)
             {
                 _batch.Put(Serialization.Serialize(_size), Serialization.Serialize(record));
                 ++_size;
             }
 
-            public void Set(int index, AnnotationRecord record)
+            public void Set(int index, AnnotationRecordCache record)
             {
                 if (index >= _size)
                     throw new IndexOutOfRangeException();
@@ -48,7 +49,7 @@ namespace AnnotationTool.Data
                 if (_size == 0)
                     throw new IndexOutOfRangeException();
 
-                _batch.Delete(Serialization.Serialize(_size));
+                _batch.Delete(Serialization.Serialize(_size - 1));
                 --_size;
             }
 
@@ -63,6 +64,7 @@ namespace AnnotationTool.Data
         public AnnotationRecordCachePersistentProvider(string path)
         {
             _path = path;
+            
             _db = new DB(new Options { CreateIfMissing = true }, path);
             _writeOptions = new WriteOptions { Sync = true };
 
@@ -73,9 +75,9 @@ namespace AnnotationTool.Data
             }
         }
 
-        public IList<AnnotationRecord> AsList()
+        public IList<AnnotationRecordCache> AsList()
         {
-            IList<AnnotationRecord> records = new List<AnnotationRecord>(_size);
+            IList<AnnotationRecordCache> records = new List<AnnotationRecordCache>(_size);
             for (int i = 0; i < _size; ++i)
             {
                 records.Add(Get(i));
@@ -94,18 +96,18 @@ namespace AnnotationTool.Data
             return _size;
         }
 
-        public void Push(AnnotationRecord record)
+        public void Push(AnnotationRecordCache record)
         {
             _db.Put(Serialization.Serialize(_size), Serialization.Serialize(record), _writeOptions);
             ++_size;
         }
 
-        public AnnotationRecord Get(int index)
+        public AnnotationRecordCache Get(int index)
         {
-            return Serialization.Deserialize<AnnotationRecord>(_db.Get(Serialization.Serialize(index)));
+            return Serialization.Deserialize<AnnotationRecordCache>(_db.Get(Serialization.Serialize(index)));
         }
 
-        public void Set(int index, AnnotationRecord record)
+        public void Set(int index, AnnotationRecordCache record)
         {
             if (index >= _size)
                 throw new IndexOutOfRangeException();
@@ -117,29 +119,36 @@ namespace AnnotationTool.Data
             if (_size == 0)
                 throw new IndexOutOfRangeException();
 
-            _db.Delete(Serialization.Serialize(_size), _writeOptions);
+            _db.Delete(Serialization.Serialize(_size - 1), _writeOptions);
             --_size;
         }
         public void Resize(int size)
         {
-            _db.Close();
-
-            File.Delete(_path);
-
-            _db = new DB(new Options { CreateIfMissing = true }, _path);
-            var record = Serialization.Serialize(new AnnotationRecord());
-
+            if (size == _size)
+                return;
+            
             using (var batch = new WriteBatch())
             {
-                for (int i = 0; i < size; ++i)
+                if (size < _size)
                 {
-                    batch.Put(Serialization.Serialize(i), record);
+                    for (int index = size; index < _size; ++index)
+                    {
+                        batch.Delete(Serialization.Serialize(index));
+                    }
+                }
+                else
+                {
+                    var emptyRecord = Serialization.Serialize(new AnnotationRecordCache(false, 0, 0, 0, 0, false, false));
+
+                    for (int index = _size; index < size; ++index)
+                    {
+                        batch.Put(Serialization.Serialize(index), emptyRecord);
+                    }
                 }
 
                 _db.Write(batch, _writeOptions);
+                _size = size;
             }
-
-            _size = size;
         }
     }
 }

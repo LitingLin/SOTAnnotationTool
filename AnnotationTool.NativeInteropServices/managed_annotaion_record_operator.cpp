@@ -23,9 +23,11 @@ namespace AnnotationTool {
 			EXCEPTION_SAFE_EXECUTION_END
 		}
 
-		AnnotationTool::Data::Model::AnnotationRecord^ AnnotationRecordOperator::Get(size_t index)
+		Tuple<Data::Model::AnnotationRecord^, bool>^ AnnotationRecordOperator::Get(size_t index)
 		{
 			EXCEPTION_SAFE_EXECUTION_BEGIN
+			bool isValidRecord = true;
+			
 			int id;
 			bool labeled;
 			int x, y, w, h;
@@ -33,21 +35,16 @@ namespace AnnotationTool {
 			std::wstring path;
 			if (!_annotationOperator->get(index, &id, &labeled, &x, &y, &w, &h, &occlusion, &outOfView, &path))
 				throw gcnew System::Exception(msclr::interop::marshal_as<String^>(fmt::format(L"Failed to get record, index: {}", index)));
-			AnnotationTool::Data::Model::AnnotationRecord^ record = gcnew AnnotationTool::Data::Model::AnnotationRecord;
-			record->IsLabeled = labeled;
-			record->X = x - 1;
-			record->Y = y - 1;
-			record->W = w;
-			record->H = h;
-			record->IsFullyOccluded = occlusion;
-			record->IsOutOfView = outOfView;
-			record->Path = msclr::interop::marshal_as<String^>(path);
 
-			return record;
+			if (id != index + 1)
+				isValidRecord = false;
+			
+			return gcnew Tuple<Data::Model::AnnotationRecord^, bool>(gcnew Data::Model::AnnotationRecord(labeled, x - 1, y - 1, w, h, occlusion, outOfView, msclr::interop::marshal_as<String^>(path)), isValidRecord);
+
 			EXCEPTION_SAFE_EXECUTION_END
 		}
 
-		void AnnotationRecordOperator::Set(size_t index, AnnotationTool::Data::Model::AnnotationRecord^ record)
+		void AnnotationRecordOperator::Set(size_t index, Data::Model::AnnotationRecord^ record)
 		{
 			EXCEPTION_SAFE_EXECUTION_BEGIN
 			System::String^ managedPath = record->Path;

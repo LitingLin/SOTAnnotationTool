@@ -12,13 +12,43 @@ namespace AnnotationTool.Data
     {
         public void Dispose()
         {
-            _annotationDbModel.Dispose();
+            _cachePersistentProvider.Dispose();
         }
 
         private readonly IList<AnnotationRecord> _annotationRecords;
         private readonly string _name;
         private readonly string _sequencePath;
-        private readonly AnnotationRecordCachePersistentProvider _annotationDbModel;
+        private readonly AnnotationRecordCachePersistentProvider _cachePersistentProvider;
+
+        private static List<int[]> LoadInitialRecordsFromTxt(string txtFilePath)
+        {
+            List<int[]> boundingBoxes = new List<int[]>();
+            using (StreamReader sr = new StreamReader(txtFilePath))
+            {
+                while (true)
+                {
+                    string line = sr.ReadLine();
+                    if (line == null)
+                        break;
+
+                    string[] words = line.Split(',');
+                    if (words.Length != 4)
+                        throw new Exception($"{txtFilePath} 无效");
+                    int[] boundingBox = new int[4];
+                    for (int i = 0; i < 4; ++i)
+                    {
+                        boundingBox[i] = checked((int)UInt32.Parse(words[i]));
+                    }
+
+                    if (boundingBox[0] > 0) boundingBox[0] -= 1;
+                    if (boundingBox[1] > 0) boundingBox[1] -= 1;
+
+                    boundingBoxes.Add(boundingBox);
+                }
+            }
+
+            return boundingBoxes;
+        }
 
         private static IList<string> GetImageFileList(string sequencePath)
         {
@@ -47,12 +77,111 @@ namespace AnnotationTool.Data
             return imageFiles;
         }
 
+        private static (IList<AnnotationRecord>, IList<bool>) LoadRecordsFromMatFile(string matPath)
+        {
+            IList<AnnotationRecord> recordList = new List<AnnotationRecord>();
+            IList<bool> recordValidityList = new List<bool>();
+
+            try
+            {
+                using (AnnotationRecordOperator annotationRecordOperator
+                    = new AnnotationRecordOperator(matPath, AnnotationRecordOperator.DesiredAccess.Read,
+                        AnnotationRecordOperator.CreationDisposition.OpenAlways))
+                {
+                    var numberOfRecordsULong = annotationRecordOperator.Length();
+                    if (numberOfRecordsULong >= int.MaxValue) throw new Exception("Too many records");
+                    int numberOfRecords = Convert.ToInt32(numberOfRecordsULong);
+
+                    for (int index = 0; index < numberOfRecords; ++index)
+                    {
+                        AnnotationRecord record = null;
+                        bool isRecordValid;
+                        try
+                        {
+                            (record, isRecordValid) = annotationRecordOperator.Get(Convert.ToUInt64(index));
+                        }
+                        catch (Exception)
+                        {
+                            isRecordValid = false;
+                        }
+
+                        if (record == null) record = new AnnotationRecord(false, 0, 0, 0, 0, false, false, null);
+
+                        recordList.Add(record);
+                        recordValidityList.Add(isRecordValid);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return (recordList, recordValidityList);
+            }
+
+            return (recordList, recordValidityList);
+        }
+
+        private static (AnnotationRecordCachePersistentProvider, IList<AnnotationRecordCache>) InitializeAnnotationCache(string cachePath)
+        {
+            var cachePersistentProvider = new AnnotationRecordCachePersistentProvider(cachePath);
+            return (cachePersistentProvider, cachePersistentProvider.AsList());
+        }
+
+        private static bool isAnnotationRecordIdentityToCache(AnnotationRecord left, AnnotationRecordCache right)
+        {
+            return !((left.IsLabeled != right.IsLabeled) || (left.X != right.X) || (left.Y != right.Y) ||
+                           (left.W != right.W) || (left.H != right.H) || (left.IsFullyOccluded != right.IsFullyOccluded) ||
+                           (left.IsOutOfView != right.IsOutOfView));
+        }
+
+        private static void apply
+
+        private static (IList<AnnotationRecord>, IDictionary<int, AnnotationRecordCache>, bool)
+            MergeMatFileRecordsAndCacheRecords(IList<AnnotationRecord> matFileRecords, IList<bool> matFileValidity,
+                IList<AnnotationRecordCache> cacheRecords, IList<string> imageFileNameList)
+        {
+            bool matFileUpdateRequired = false;
+
+            IList<AnnotationRecord> mergeResults = new List<AnnotationRecord>(imageFileNameList.Count);
+            IDictionary<int, AnnotationRecordCache> cacheUpdateList = new Dictionary<int, AnnotationRecordCache>();
+
+            int maxRecordsLength = imageFileNameList.Count;
+
+            if (matFileRecords.Count != maxRecordsLength)
+                matFileUpdateRequired = true;
+
+            // Trust chain: cache > mat file
+
+            int firstPhaseLength = Math.Min(Math.Min(maxRecordsLength, matFileRecords.Count), cacheRecords.Count);
+            for (int index = 0; index < firstPhaseLength; ++index)
+            {
+                AnnotationRecord mergedRecord = matFileRecords[index].Clone();
+
+                var cacheResult = cacheRecords[index];
+                if (isAnnotationRecordIdentityToCache(mergedRecord, cacheResult))
+                {
+
+                }
+            }
+        }
+
         void init(string sequencePath)
         {
-            var initialRecords = LoadInitialRecordsFromTxt(Path.Combine(sequencePath, "res.txt"));
-            var imageFileList = GetImageFileList(sequencePath);
-            var (matRecords, isMatRecordValid) = LoadRecordsFromMatFile(Path.Combine(sequencePath, "res.mat"), imageFileList);
+            string initialRecordPath = Path.Combine(sequencePath, "res.txt");
+            string matFilePath = Path.Combine(sequencePath, "res.mat");
+            string cacheFilePath = Path.Combine(sequencePath, "cache.db");
 
+            IList<int[]> initialRecords = null;
+            var imageFileList = GetImageFileList(sequencePath);
+            if (File.Exists(initialRecordPath))
+                initialRecords = LoadInitialRecordsFromTxt(initialRecordPath);
+
+            
+            var (matRecords, isMatRecordValid) = LoadRecordsFromMatFile(matFilePath);
+            var (cachePersistentProvider, cacheRecords) = InitializeAnnotationCache(cacheFilePath);
+
+
+
+            _cachePersistentProvider = cachePersistentProvider;
         }
 
         public AnnotationRecordDataAccessor(string sequencePath)
@@ -161,41 +290,12 @@ namespace AnnotationTool.Data
                 GenerateMatlabFile(records);
             }
 
-            _annotationDbModel = new AnnotationRecordCachePersistentProvider(Path.Combine(_sequencePath, "cache.db"));
+            _cachePersistentProvider = new AnnotationRecordCachePersistentProvider(Path.Combine(_sequencePath, "cache.db"));
             InitializeCache(records);
 
             _annotationRecords = records;
         }
 
-        private List<int[]> LoadInitialRecordsFromTxt(string txtFilePath)
-        {
-            List<int[]> boundingBoxes = new List<int[]>();
-            using (StreamReader sr = new StreamReader(txtFilePath))
-            {
-                while (true)
-                {
-                    string line = sr.ReadLine();
-                    if (line == null)
-                        break;
-
-                    string[] words = line.Split(',');
-                    if (words.Length != 4)
-                        throw new Exception($"{txtFilePath} 无效");
-                    int[] boundingBox = new int[4];
-                    for (int i = 0; i < 4; ++i)
-                    {
-                        boundingBox[i] = checked((int)UInt32.Parse(words[i]));
-                    }
-
-                    if (boundingBox[0] > 0) boundingBox[0] -= 1;
-                    if (boundingBox[1] > 0) boundingBox[1] -= 1;
-
-                    boundingBoxes.Add(boundingBox);
-                }
-            }
-
-            return boundingBoxes;
-        }
 
         private void GenerateMatlabFile(IList<AnnotationRecord> records)
         {
@@ -216,25 +316,25 @@ namespace AnnotationTool.Data
 
         private void InitializeCache(IList<AnnotationRecord> records)
         {
-            if (_annotationDbModel.GetSize() != records.Count)
+            if (_cachePersistentProvider.GetSize() != records.Count)
             {
-                _annotationDbModel.Resize(0);
+                _cachePersistentProvider.Resize(0);
                 for (int i = 0; i < records.Count; ++i)
                 {
                     var annotation = records[i];
-                    _annotationDbModel.Push(annotation);
+                    _cachePersistentProvider.Push(annotation);
                 }
             }
             else
             {
                 for (int i = 1; i < records.Count; ++i)
                 {
-                    records[i] = _annotationDbModel.Get(i);
+                    records[i] = _cachePersistentProvider.Get(i);
                 }
             }
         }
 
-        private (IList<AnnotationRecord>, bool) LoadRecordsFromMatFile(string matPath, IList<string> imageFiles)
+        private (IList<AnnotationRecord>, bool) LoadRecordsFromMatFile1(string matPath, IList<string> imageFiles)
         {
             IList<AnnotationRecord> records = new List<AnnotationRecord>();
             bool isRecordValid = true;
@@ -273,7 +373,7 @@ namespace AnnotationTool.Data
                         record.Path = imageFile;
                         isRecordValid = false;
                     }
-                    
+
                     records.Add(record);
 
                     index++;
@@ -313,7 +413,7 @@ namespace AnnotationTool.Data
 
             _pendingUpdates.Add(index);
 
-            _annotationDbModel.Set(index, annotation.IsLabeled, annotation.X, annotation.Y, annotation.W, annotation.H,
+            _cachePersistentProvider.Set(index, annotation.IsLabeled, annotation.X, annotation.Y, annotation.W, annotation.H,
                 annotation.IsFullyOccluded, annotation.IsOutOfView, annotation.Path);
         }
 

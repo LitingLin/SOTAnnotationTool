@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace AnnotationTool.Data.Model
 {
-    public class AnnotationRecord
+    public class AnnotationRecordCache
     {
         public bool IsLabeled;
         public int X;
@@ -11,14 +13,8 @@ namespace AnnotationTool.Data.Model
         public int H;
         public bool IsFullyOccluded;
         public bool IsOutOfView;
-        public string Path;
 
-        public AnnotationRecord Clone()
-        {
-            return (AnnotationRecord)MemberwiseClone();
-        }
-
-        public AnnotationRecord(bool isLabeled, int x, int y, int w, int h, bool isFullyOccluded, bool isOutOfView, string path)
+        public AnnotationRecordCache(bool isLabeled, int x, int y, int w, int h, bool isFullyOccluded, bool isOutOfView)
         {
             IsLabeled = isLabeled;
 
@@ -29,9 +25,11 @@ namespace AnnotationTool.Data.Model
 
             IsFullyOccluded = isFullyOccluded;
             IsOutOfView = isOutOfView;
+        }
 
-            Path = path;
+        public AnnotationRecordCache Clone()
+        {
+            return (AnnotationRecordCache) MemberwiseClone();
         }
     }
-
 }

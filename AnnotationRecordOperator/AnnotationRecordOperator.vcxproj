@@ -70,6 +70,14 @@
   <ItemGroup>
     <ClCompile Include="src\annotation_record_operation.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base-libs\vcproj\3rd_party\fmt\fmt.vcxproj">
+      <Project>{0648da17-fc38-43ac-9c51-99cd61d46b94}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\base-libs\vcproj\dynamic\base\base.vcxproj">
+      <Project>{34b7c3f3-324a-4370-963e-8725df78c145}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -23,7 +23,7 @@ namespace AnnotationTool {
 			};
 			AnnotationRecordOperator(System::String^ path, DesiredAccess desiredAccess, CreationDisposition creationDisposition);
 			size_t Length();
-			AnnotationTool::Data::Model::AnnotationRecord^ Get(size_t index);
+			Tuple<Data::Model::AnnotationRecord^, bool>^ Get(size_t index);
 			void Set(size_t index, AnnotationTool::Data::Model::AnnotationRecord^ record);
 			void Resize(size_t n);
 			~AnnotationRecordOperator();
