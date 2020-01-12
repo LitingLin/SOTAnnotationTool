@@ -19,6 +19,7 @@ namespace AnnotationTool.Data
         private readonly string _sequencePath;
         private readonly AnnotationRecordCachePersistentProvider _annotationDbModel;
         
+        
         public AnnotationRecordDataAccessor(string sequencePath)
         {
             _sequencePath = sequencePath;
@@ -161,6 +162,8 @@ namespace AnnotationTool.Data
             return boundingBoxes;
         }
 
+
+
         private void GenerateMatlabFile(IList<AnnotationRecord> records)
         {
             using (AnnotationRecordOperator annotationRecordOperator
@@ -225,10 +228,10 @@ namespace AnnotationTool.Data
             return imageFiles;
         }
 
-        private IList<AnnotationRecord> Load(string matPath, IList<string> imageFiles, out bool requireUpdate)
+        private (IList<AnnotationRecord>, bool) Load(string matPath, IList<string> imageFiles)
         {
             IList<AnnotationRecord> records = new List<AnnotationRecord>();
-            requireUpdate = false;
+            bool requireUpdate = false;
 
             using (AnnotationRecordOperator annotationRecordOperator
                 = new AnnotationRecordOperator(matPath, AnnotationRecordOperator.DesiredAccess.Read, AnnotationRecordOperator.CreationDisposition.OpenAlways))

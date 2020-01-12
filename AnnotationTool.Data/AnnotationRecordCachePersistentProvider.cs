@@ -73,6 +73,17 @@ namespace AnnotationTool.Data
             }
         }
 
+        public IList<AnnotationRecord> AsList()
+        {
+            IList<AnnotationRecord> records = new List<AnnotationRecord>(_size);
+            for (int i = 0; i < _size; ++i)
+            {
+                records.Add(Get(i));
+            }
+
+            return records;
+        }
+
         public void Dispose()
         {
             _db.Close();
@@ -89,9 +100,9 @@ namespace AnnotationTool.Data
             ++_size;
         }
 
-        public AnnotationRecord Get(int size)
+        public AnnotationRecord Get(int index)
         {
-            return Serialization.Deserialize<AnnotationRecord>(_db.Get(Serialization.Serialize(size)));
+            return Serialization.Deserialize<AnnotationRecord>(_db.Get(Serialization.Serialize(index)));
         }
 
         public void Set(int index, AnnotationRecord record)
