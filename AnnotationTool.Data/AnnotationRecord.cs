@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using AnnotationTool.Data.Model;
 using AnnotationTool.NativeInteropServices;
+using AnnotationTool.Resources;
 
 namespace AnnotationTool.Data
 {
@@ -18,8 +19,42 @@ namespace AnnotationTool.Data
         private readonly string _name;
         private readonly string _sequencePath;
         private readonly AnnotationRecordCachePersistentProvider _annotationDbModel;
-        
-        
+
+        private static IList<string> GetImageFileList(string sequencePath)
+        {
+            var directoryInfo = new DirectoryInfo(sequencePath);
+            var imageFileInfos = directoryInfo.EnumerateFiles("*.jpg", SearchOption.TopDirectoryOnly).ToArray();
+
+            if (!imageFileInfos.Any())
+                throw new Exception(MultiLanguageResources.NoValidImageFilesInDirectory);
+
+            IList<string> imageFiles = new List<string>(imageFileInfos.Count());
+
+            int count = 1;
+
+            foreach (var imageFileInfo in imageFileInfos)
+            {
+                string expectedFileName = $"{count:D8}.jpg";
+
+                if (imageFileInfo.Name != expectedFileName)
+                    throw new Exception(string.Format(MultiLanguageResources.ImageFileMissing, expectedFileName));
+
+                imageFiles.Add(expectedFileName);
+
+                count++;
+            }
+
+            return imageFiles;
+        }
+
+        void init(string sequencePath)
+        {
+            var initialRecords = LoadInitialRecordsFromTxt(Path.Combine(sequencePath, "res.txt"));
+            var imageFileList = GetImageFileList(sequencePath);
+            var (matRecords, isMatRecordValid) = LoadRecordsFromMatFile(Path.Combine(sequencePath, "res.mat"), imageFileList);
+
+        }
+
         public AnnotationRecordDataAccessor(string sequencePath)
         {
             _sequencePath = sequencePath;
@@ -162,8 +197,6 @@ namespace AnnotationTool.Data
             return boundingBoxes;
         }
 
-
-
         private void GenerateMatlabFile(IList<AnnotationRecord> records)
         {
             using (AnnotationRecordOperator annotationRecordOperator
@@ -201,60 +234,35 @@ namespace AnnotationTool.Data
             }
         }
 
-        private IList<string> GetImageFileNames()
-        {
-            var directoryInfo = new DirectoryInfo(_sequencePath);
-            var imageFileInfos = directoryInfo.EnumerateFiles("*.jpg", SearchOption.TopDirectoryOnly).ToArray();
-
-            if (!imageFileInfos.Any())
-                throw new ApplicationException("文件夹下没有有效的图片文件");
-
-            IList<string> imageFiles = new List<string>(imageFileInfos.Count());
-
-            int count = 1;
-
-            foreach (var imageFileInfo in imageFileInfos)
-            {
-                string expectedFileName = $"{count:D8}.jpg";
-
-                if (imageFileInfo.Name != expectedFileName)
-                    throw new ApplicationException($"缺少图片 {expectedFileName}");
-
-                imageFiles.Add(expectedFileName);
-
-                count++;
-            }
-
-            return imageFiles;
-        }
-
-        private (IList<AnnotationRecord>, bool) Load(string matPath, IList<string> imageFiles)
+        private (IList<AnnotationRecord>, bool) LoadRecordsFromMatFile(string matPath, IList<string> imageFiles)
         {
             IList<AnnotationRecord> records = new List<AnnotationRecord>();
-            bool requireUpdate = false;
+            bool isRecordValid = true;
 
             using (AnnotationRecordOperator annotationRecordOperator
                 = new AnnotationRecordOperator(matPath, AnnotationRecordOperator.DesiredAccess.Read, AnnotationRecordOperator.CreationDisposition.OpenAlways))
             {
-                var numberOfRecords = annotationRecordOperator.Length();
-                ulong index = 0;
-                bool abandonAnnotationRecord = false;
+                var numberOfRecordsULong = annotationRecordOperator.Length();
+                if (numberOfRecordsULong >= int.MaxValue) throw new Exception("Too many records");
+                int numberOfRecords = Convert.ToInt32(numberOfRecordsULong);
+                if (numberOfRecords != imageFiles.Count) isRecordValid = false;
+
+                int index = 0;
                 foreach (var imageFile in imageFiles)
                 {
                     AnnotationRecord record = null;
-                    if (index == numberOfRecords) abandonAnnotationRecord = true;
-                    if (!abandonAnnotationRecord)
+                    if (index < numberOfRecords)
                     {
                         try
                         {
-                            record = annotationRecordOperator.Get(index);
+                            record = annotationRecordOperator.Get(Convert.ToUInt64(index));
                         }
                         catch (Exception)
                         {
                             if (index == 0)
-                                throw new Exception("res.mat 无效");
+                                throw new Exception(string.Format(MultiLanguageResources.InvalidFile, "res.mat"));
                             else
-                                abandonAnnotationRecord = true;
+                                isRecordValid = false;
                         }
                     }
 
@@ -263,22 +271,16 @@ namespace AnnotationTool.Data
                     if (record.Path != imageFile)
                     {
                         record.Path = imageFile;
-                        requireUpdate = true;
+                        isRecordValid = false;
                     }
                     
                     records.Add(record);
 
                     index++;
                 }
-
-                if (abandonAnnotationRecord)
-                    requireUpdate = true;
-
-                if (imageFiles.Count != Convert.ToInt32(numberOfRecords))
-                    requireUpdate = true;
             }
 
-            return records;
+            return (records, isRecordValid);
         }
 
         public void Import(string matPath)
