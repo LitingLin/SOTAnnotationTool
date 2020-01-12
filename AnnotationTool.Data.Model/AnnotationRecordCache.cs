@@ -4,6 +4,7 @@ using System.Text;
 
 namespace AnnotationTool.Data.Model
 {
+    [Serializable]
     public class AnnotationRecordCache
     {
         public bool IsLabeled;

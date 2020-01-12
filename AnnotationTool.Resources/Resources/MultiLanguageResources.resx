@@ -123,6 +123,9 @@
   <data name="InvalidFile" xml:space="preserve">
     <value>Invalid file {0}</value>
   </data>
+  <data name="InvalidPath" xml:space="preserve">
+    <value>Invalid Path {0}</value>
+  </data>
   <data name="NoValidImageFilesInDirectory" xml:space="preserve">
     <value>No valid image files in the directory</value>
   </data>

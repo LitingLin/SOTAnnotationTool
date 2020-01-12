@@ -15,16 +15,25 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(OpenVINOInferenceEnginePATH)include;$(OpenVINOInferenceEnginePATH)include\cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions></PreprocessorDefinitions>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
     </ClCompile>
     <Link Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       <AdditionalLibraryDirectories>$(OpenVINOInferenceEnginePATH)lib\intel64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>inference_engined.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(CLRSupport)'=='false'">inference_engined.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AssemblyLinkResource Condition="'$(CLRSupport)'!='false'">$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll;$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
     </Link>
     <Link Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       <AdditionalLibraryDirectories>$(OpenVINOInferenceEnginePATH)lib\intel64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>inference_engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(CLRSupport)'=='false'">inference_engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AssemblyLinkResource Condition="'$(CLRSupport)'!='false'">$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll;$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
     </Link>
+    <PostBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll" "$(OutputPath)" /D /Y</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll" "$(OutputPath)" /D /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="OpenVINOInferenceEnginePATH">

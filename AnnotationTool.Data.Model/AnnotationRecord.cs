@@ -2,6 +2,7 @@
 
 namespace AnnotationTool.Data.Model
 {
+    [Serializable]
     public class AnnotationRecord
     {
         public bool IsLabeled;

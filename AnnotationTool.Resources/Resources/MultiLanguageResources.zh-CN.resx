@@ -123,6 +123,9 @@
   <data name="InvalidFile" xml:space="preserve">
     <value>无效的文件 {0}</value>
   </data>
+  <data name="InvalidPath" xml:space="preserve">
+    <value>无效的路径 {0}</value>
+  </data>
   <data name="NoValidImageFilesInDirectory" xml:space="preserve">
     <value>文件夹下没有有效的图片文件</value>
   </data>

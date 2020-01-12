@@ -19,4 +19,11 @@
     <PackageReference Include="LevelDB.Standard" Version="2.1.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AnnotationTool.Data.Model\AnnotationTool.Data.Model.csproj" />
+    <ProjectReference Include="..\AnnotationTool.Data\AnnotationTool.Data.csproj" />
+    <ProjectReference Include="..\AnnotationTool.NativeInteropServices\AnnotationTool.NativeInteropServices.vcxproj" />
+    <ProjectReference Include="..\AnnotationTool.Resources\AnnotationTool.Resources.csproj" />
+  </ItemGroup>
+
 </Project>

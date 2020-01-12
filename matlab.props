@@ -3,6 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <Matlab_Dir>C:\Program Files\MATLAB\R2019b\</Matlab_Dir>
+    <MatlabRuntime_Dir>$(Matlab_Dir)bin\win64\</MatlabRuntime_Dir>
   </PropertyGroup>
   <PropertyGroup>
     <LocalDebuggerEnvironment>PATH=$(Matlab_Dir)bin\win64;%PATH%
@@ -12,12 +13,40 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <ClCompile>
       <AdditionalIncludeDirectories>$(Matlab_Dir)extern\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MATLAB_MEX_FILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <ExceptionHandling Condition="'$(CLRSupport)'=='false'">SyncCThrow</ExceptionHandling>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(Matlab_Dir)extern\lib\win64\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmat.lib;libmx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies Condition="'$(CLRSupport)'=='false'">libmat.lib;libmx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AssemblyLinkResource Condition="'$(CLRSupport)'!='false'">$(MatlabRuntime_Dir)libmat.dll;$(MatlabRuntime_Dir)libmx.dll;$(MatlabRuntime_Dir)libmwfl.dll;$(MatlabRuntime_Dir)mwboost_date_time-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_filesystem-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_log-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_serialization-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_system-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_thread-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_chrono-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)libmwresource_core.dll;$(MatlabRuntime_Dir)libmwcpp11compat.dll;$(MatlabRuntime_Dir)icuuc61.dll;$(MatlabRuntime_Dir)icuio61.dll;$(MatlabRuntime_Dir)libexpat.dll;$(MatlabRuntime_Dir)hdf5.dll;$(MatlabRuntime_Dir)icudt61.dll;$(MatlabRuntime_Dir)libut.dll;$(MatlabRuntime_Dir)libmwmfl_permute.dll;$(MatlabRuntime_Dir)libmwindexingapimethods.dll;$(MatlabRuntime_Dir)libmwi18n.dll;$(MatlabRuntime_Dir)libmwfoundation_usm.dll;$(MatlabRuntime_Dir)icuin61.dll;$(MatlabRuntime_Dir)zlib1.dll;$(MatlabRuntime_Dir)msvcr120.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
     </Link>
     <CustomBuildStep />
+    <PostBuildEvent>
+      <Command>xcopy "$(MatlabRuntime_Dir)libmat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmx.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwfl.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_date_time-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_filesystem-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_log-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_serialization-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_system-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_thread-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_chrono-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwresource_core.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwcpp11compat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuuc61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuio61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libexpat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)hdf5.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icudt61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuin61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libut.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)zlib1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)msvcr120.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwmfl_permute.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwindexingapimethods.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwi18n.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwfoundation_usm.dll" "$(OutputPath)" /D /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
 </Project>

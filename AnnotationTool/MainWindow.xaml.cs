@@ -22,12 +22,10 @@ using Xceed.Wpf.Toolkit;
 using MessageBox = System.Windows.MessageBox;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using TrackerWrapper;
+using AnnotationTool.Data;
+using AnnotationTool.Data.Model;
+using AnnotationTool.NativeInteropServices;
 
-namespace System.Runtime.CompilerServices
-{
-    sealed class CallerMemberNameAttribute : Attribute { }
-}
 namespace AnnotationTool
 {
     /// <summary>
@@ -40,18 +38,6 @@ namespace AnnotationTool
 
         public MainWindow()
         {
-            try
-            {
-                NativeLibraryLoader.Load();
-                SystemEnvironmentChecker.Check();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                Close();
-                return;
-            }
-
             InitializeComponent();
             DataContext = viewModel;
             SetupKeyBindings();
@@ -60,7 +46,6 @@ namespace AnnotationTool
             ButtonBrowseDatasetFile.Focusable = false;
             viewModel.IsTrackerActivated = true;
             viewModel.IsUpdateMatlabRecordOnAppropriateOpportunity = true;
-            _matlabIndexing = true;
         }
 
         private void SelectiveBoxCanvasOnOnShapeChanged(Rect shape)
@@ -130,7 +115,7 @@ namespace AnnotationTool
         }
         private void ImportRecord(string recordPath)
         {
-            _annotationServiceProvider.Import(recordPath);
+            _annotationRecordDataAccessor.Import(recordPath);
 
             var currentIndex = _currentIndex;
 
@@ -141,22 +126,22 @@ namespace AnnotationTool
             OpenFrame(currentIndex.Value);
         }
 
-        private AnnotationServiceProvider _annotationServiceProvider;
+        private AnnotationRecordDataAccessor _annotationRecordDataAccessor;
 
         private void InitializeUserInterface()
         {
-            int numberOfFrames = _annotationServiceProvider.GetNumberOfRecords();
+            int numberOfFrames = _annotationRecordDataAccessor.GetNumberOfRecords();
 
             for (int index = 0; index < numberOfFrames; ++index)
             {
-                var annotationRecord = _annotationServiceProvider.Get(index);
+                var annotationRecord = _annotationRecordDataAccessor.Get(index);
                 viewModel.FrameInformations.Add(new MainWindowViewModel.FrameInformation() { Id = index + 1, IsLabeled = annotationRecord.IsLabeled, X = annotationRecord.X, Y = annotationRecord.Y, W = annotationRecord.W, H = annotationRecord.H, IsFullOccluded = annotationRecord.IsFullyOccluded, IsOutOfView = annotationRecord.IsOutOfView });
             }
-            var firstRecord = _annotationServiceProvider.Get(0);
+            var firstRecord = _annotationRecordDataAccessor.Get(0);
 
             BitmapImage firstFrameImage = new BitmapImage();
             firstFrameImage.BeginInit();
-            firstFrameImage.UriSource = new Uri(_annotationServiceProvider.GetImagePath(0));
+            firstFrameImage.UriSource = new Uri(_annotationRecordDataAccessor.GetImagePath(0));
             firstFrameImage.SourceRect = new Int32Rect(firstRecord.X, firstRecord.Y, firstRecord.W, firstRecord.H);
             firstFrameImage.EndInit();
 
@@ -166,30 +151,31 @@ namespace AnnotationTool
             viewModel.CurrentIndexOfFrame = 0;
             viewModel.TotalNumberOfFrames = numberOfFrames;
             viewModel.MaxIndexOfFrame = numberOfFrames;
-            viewModel.CurrentSequenceName = _annotationServiceProvider.GetName();
+            viewModel.CurrentSequenceName = _annotationRecordDataAccessor.GetName();
         }
 
         private void OpenSequence(string path)
         {
-            if (_annotationServiceProvider != null)
+            if (_annotationRecordDataAccessor != null)
             {
                 if (viewModel.IsUpdateMatlabRecordOnAppropriateOpportunity)
-                    _annotationServiceProvider.UpdateMatlabFile();
-                _annotationServiceProvider.Dispose();
-                _annotationServiceProvider = null;
+                    _annotationRecordDataAccessor.UpdateMatlabFile();
+                _annotationRecordDataAccessor.Dispose();
+                _annotationRecordDataAccessor = null;
             }
-
+#if !DEBUG
             try
             {
-                _annotationServiceProvider = new AnnotationServiceProvider(path, _matlabIndexing);
-                if (!_annotationServiceProvider.Get(0).IsLabeled)
-                    throw new InvalidOperationException("res.mat中不存在初始记录");
+#endif
+                _annotationRecordDataAccessor = new AnnotationRecordDataAccessor(path);
+#if !DEBUG
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message, "异常", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+#endif
 
             InitializeUserInterface();
 
@@ -237,6 +223,25 @@ namespace AnnotationTool
             Canvas.SetTop(rectangle, y - new_y);
         }
 
+        private byte[] _bgrRawPixelCache = null;
+        private int _bgrRawPixelCacheSize;
+        private byte[] DecodeImage(BitmapImage image)
+        {
+            FormatConvertedBitmap convertedBitmap = new FormatConvertedBitmap(image, PixelFormats.Bgr24, null, 0);
+            int bytesPerPixel = (convertedBitmap.Format.BitsPerPixel + 7) / 8;
+            int requiredCacheSize = bytesPerPixel * convertedBitmap.PixelWidth * convertedBitmap.PixelHeight;
+            if (_bgrRawPixelCache == null || _bgrRawPixelCacheSize != requiredCacheSize)
+            {
+                _bgrRawPixelCache = new byte[bytesPerPixel * convertedBitmap.PixelWidth * convertedBitmap.PixelHeight];
+                _bgrRawPixelCacheSize = requiredCacheSize;
+            }
+
+            Int32Rect rect = new Int32Rect(0, 0, convertedBitmap.PixelWidth, convertedBitmap.PixelHeight);
+            convertedBitmap.CopyPixels(rect, _bgrRawPixelCache, bytesPerPixel * convertedBitmap.PixelWidth, 0);
+
+            return _bgrRawPixelCache;
+        }
+
         bool TrackTargetBasedOnPreviousFrame()
         {
             if (!_currentIndex.HasValue)
@@ -246,11 +251,11 @@ namespace AnnotationTool
             int currentIndex = _currentIndex.Value;
             if (!_lastIndex.HasValue || _lastIndex.Value != currentIndex - 1)
             {
-                _lastImage = new BitmapImage(new Uri(_annotationServiceProvider.GetImagePath(currentIndex - 1)));
+                _lastImage = new BitmapImage(new Uri(_annotationRecordDataAccessor.GetImagePath(currentIndex - 1)));
                 _lastIndex = currentIndex - 1;
             }
 
-            var lastRecord = _annotationServiceProvider.Get(currentIndex - 1);
+            var lastRecord = _annotationRecordDataAccessor.Get(currentIndex - 1);
 
             if (!lastRecord.IsLabeled || lastRecord.IsFullyOccluded || lastRecord.IsOutOfView)
                 return false;
@@ -259,8 +264,13 @@ namespace AnnotationTool
 
             using (BACFTracker tracker = new BACFTracker())
             {
-                tracker.Initialize(_lastImage, new Rect(lastRecord.X, lastRecord.Y, lastRecord.W, lastRecord.H));
-                predicted = tracker.Predict(_currentImage);
+                tracker.Initialize(DecodeImage(_lastImage), _lastImage.PixelWidth, _lastImage.PixelHeight, lastRecord.X, lastRecord.Y, lastRecord.W, lastRecord.H);
+                var bbox = tracker.Predict(DecodeImage(_currentImage), _currentImage.PixelWidth, _currentImage.PixelHeight);
+                predicted = new Rect();
+                predicted.X = bbox.Item1;
+                predicted.Y = bbox.Item2;
+                predicted.Width = bbox.Item3;
+                predicted.Height = bbox.Item4;
             }
 
             if (predicted.X >= _currentImage.PixelWidth || predicted.Y >= _currentImage.PixelHeight)
@@ -304,7 +314,7 @@ namespace AnnotationTool
 
         private bool _isUserSelectFrameInformationDataGridRow = true;
 
-        private void SetBoundingBox(AnnotationServiceProvider.AnnotationRecord record)
+        private void SetBoundingBox(AnnotationRecord record)
         {
             if (record.W > 0 && record.H > 0)
             {
@@ -319,7 +329,7 @@ namespace AnnotationTool
             {
                 if (_currentIndex > 0)
                 {
-                    var lastFrameRecord = _annotationServiceProvider.Get(_currentIndex.Value - 1);
+                    var lastFrameRecord = _annotationRecordDataAccessor.Get(_currentIndex.Value - 1);
                     if (lastFrameRecord.W > 0 && lastFrameRecord.H > 0)
                     {
                         _shapeTextBoxIsModifiedByUser = false;
@@ -347,10 +357,10 @@ namespace AnnotationTool
             }
 
             BitmapImage image;
-            string imagePath = _annotationServiceProvider.GetImagePath(index);
+            string imagePath = _annotationRecordDataAccessor.GetImagePath(index);
             try
             {
-                image = new BitmapImage(new Uri(_annotationServiceProvider.GetImagePath(index)));
+                image = new BitmapImage(new Uri(_annotationRecordDataAccessor.GetImagePath(index)));
             }
             catch (Exception e)
             {
@@ -371,7 +381,7 @@ namespace AnnotationTool
             AnnotationCanvas.Width = _currentImage.PixelWidth;
             AnnotationCanvas.Height = _currentImage.PixelHeight;
 
-            var record = _annotationServiceProvider.Get(_currentIndex.Value);
+            var record = _annotationRecordDataAccessor.Get(_currentIndex.Value);
 
             bool needFix = false;
 
@@ -388,7 +398,7 @@ namespace AnnotationTool
             }
 
             if (needFix)
-                _annotationServiceProvider.Update(_currentIndex.Value, record);
+                _annotationRecordDataAccessor.Update(_currentIndex.Value, record);
 
             if (viewModel.IsTrackerActivated)
             {
@@ -466,14 +476,14 @@ namespace AnnotationTool
 
             viewModel.FrameInformations[_currentIndex.Value] = currentFrameInformation;
 
-            var record = _annotationServiceProvider.Get(_currentIndex.Value);
+            var record = _annotationRecordDataAccessor.Get(_currentIndex.Value);
             record.X = viewModel.X;
             record.Y = viewModel.Y;
             record.W = viewModel.W;
             record.H = viewModel.H;
             record.IsFullyOccluded = viewModel.IsFullyOccluded;
             record.IsOutOfView = viewModel.IsOutOfView;
-            _annotationServiceProvider.Update(_currentIndex.Value, record);
+            _annotationRecordDataAccessor.Update(_currentIndex.Value, record);
         }
 
         private void SubmitRecord()
@@ -481,22 +491,22 @@ namespace AnnotationTool
             if (_currentIndex.Value == 0)
                 return;
 
-            var record = _annotationServiceProvider.Get(_currentIndex.Value);
+            var record = _annotationRecordDataAccessor.Get(_currentIndex.Value);
 
             if (record.W == 0 || record.H == 0 && !record.IsFullyOccluded && !record.IsOutOfView)
                 return;
 
             record.IsLabeled = true;
-            _annotationServiceProvider.Update(_currentIndex.Value, record);
+            _annotationRecordDataAccessor.Update(_currentIndex.Value, record);
 
             var currentFrameInformation = viewModel.FrameInformations[_currentIndex.Value];
             currentFrameInformation.IsLabeled = true;
             viewModel.FrameInformations[_currentIndex.Value] = currentFrameInformation;
 
-            _annotationServiceProvider.Submit(_currentIndex.Value);
+            _annotationRecordDataAccessor.Submit(_currentIndex.Value);
 
             if (viewModel.IsUpdateMatlabRecordOnSubmit)
-                _annotationServiceProvider.UpdateMatlabFile();
+                _annotationRecordDataAccessor.UpdateMatlabFile();
         }
 
         private void ButtonBrowseDatasetFile_OnClick(object sender, RoutedEventArgs e)
@@ -626,12 +636,12 @@ namespace AnnotationTool
 
         private void OpenNextFrame()
         {
-            if (_currentIndex < _annotationServiceProvider.GetNumberOfRecords() - 1)
+            if (_currentIndex < _annotationRecordDataAccessor.GetNumberOfRecords() - 1)
                 OpenFrame(_currentIndex.Value + 1);
             else
             {
                 if (viewModel.IsUpdateMatlabRecordOnAppropriateOpportunity)
-                    _annotationServiceProvider.UpdateMatlabFile();
+                    _annotationRecordDataAccessor.UpdateMatlabFile();
                 MessageBox.Show("已到达最后一帧");
             }
         }
@@ -706,26 +716,26 @@ namespace AnnotationTool
 
         private void MainWindow_OnDeactivated(object sender, EventArgs e)
         {
-            if (_annotationServiceProvider == null)
+            if (_annotationRecordDataAccessor == null)
                 return;
             if (viewModel.IsUpdateMatlabRecordOnAppropriateOpportunity)
-                _annotationServiceProvider.UpdateMatlabFile();
+                _annotationRecordDataAccessor.UpdateMatlabFile();
         }
 
         private void UpdateMatlabRecordButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_annotationServiceProvider == null)
+            if (_annotationRecordDataAccessor == null)
                 return;
 
-            _annotationServiceProvider.UpdateMatlabFile();
+            _annotationRecordDataAccessor.UpdateMatlabFile();
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
         {
-            if (_annotationServiceProvider == null)
+            if (_annotationRecordDataAccessor == null)
                 return;
             if (viewModel.IsUpdateMatlabRecordOnAppropriateOpportunity)
-                _annotationServiceProvider.UpdateMatlabFile();
+                _annotationRecordDataAccessor.UpdateMatlabFile();
         }
 
         private void CopyLastFrame()
@@ -734,7 +744,7 @@ namespace AnnotationTool
             if (currentIndex == 0)
                 return;
 
-            var record = _annotationServiceProvider.Get(currentIndex - 1);
+            var record = _annotationRecordDataAccessor.Get(currentIndex - 1);
 
             _shapeTextBoxIsModifiedByUser = false;
             viewModel.X = record.X;
@@ -764,28 +774,14 @@ namespace AnnotationTool
 
         private void RecordPlusOneButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var size = _annotationServiceProvider.GetNumberOfRecords();
+            var size = _annotationRecordDataAccessor.GetNumberOfRecords();
             for (int i = 1; i < size; ++i)
             {
-                var record = _annotationServiceProvider.Get(i);
+                var record = _annotationRecordDataAccessor.Get(i);
                 record.X++;
                 record.Y++;
-                _annotationServiceProvider.Submit(i);
+                _annotationRecordDataAccessor.Submit(i);
             }
-        }
-
-        private bool _matlabIndexing = true;
-
-        private void MATLABIndexingButton_OnChecked(object sender, RoutedEventArgs e)
-        {
-            _matlabIndexing = true;
-            _annotationServiceProvider?.SetMatlabIndexing(_matlabIndexing);
-        }
-
-        private void MATLABIndexingButton_OnUnChecked(object sender, RoutedEventArgs e)
-        {
-            _matlabIndexing = false;
-            _annotationServiceProvider?.SetMatlabIndexing(false);
         }
     }
 }

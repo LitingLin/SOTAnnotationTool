@@ -79,6 +79,15 @@ namespace AnnotationTool.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Path {0}.
+        /// </summary>
+        public static string InvalidPath {
+            get {
+                return ResourceManager.GetString("InvalidPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No valid image files in the directory.
         /// </summary>
         public static string NoValidImageFilesInDirectory {

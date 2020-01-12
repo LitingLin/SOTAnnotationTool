@@ -42,11 +42,17 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\base-libs.props" />
     <Import Project="..\base-libs\vcproj\debug.props" />
+    <Import Project="..\matlab.props" />
+    <Import Project="..\opencv.props" />
+    <Import Project="..\openvino.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\base-libs.props" />
     <Import Project="..\base-libs\vcproj\release.props" />
+    <Import Project="..\matlab.props" />
+    <Import Project="..\opencv.props" />
+    <Import Project="..\openvino.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -58,6 +64,10 @@
     </ClCompile>
     <ProjectReference />
     <Link />
+    <PostBuildEvent />
+    <Link>
+      <AssemblyLinkResource>$(OutputPath)AnnotationRecordOperator.dll;$(OutputPath)BACFTracker.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -67,6 +77,9 @@
     </ClCompile>
     <ProjectReference />
     <Link />
+    <Link>
+      <AssemblyLinkResource>$(OutputPath)AnnotationRecordOperator.dll;$(OutputPath)BACFTracker.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="managed_annotation_record_operator.h" />
