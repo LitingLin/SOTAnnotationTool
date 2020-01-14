@@ -771,17 +771,5 @@ namespace AnnotationTool
         {
             ClearRecord();
         }
-
-        private void RecordPlusOneButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            var size = _annotationRecordDataAccessor.GetNumberOfRecords();
-            for (int i = 1; i < size; ++i)
-            {
-                var record = _annotationRecordDataAccessor.Get(i);
-                record.X++;
-                record.Y++;
-                _annotationRecordDataAccessor.Submit(i);
-            }
-        }
     }
 }
