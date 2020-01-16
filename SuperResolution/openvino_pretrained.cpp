@@ -22,6 +22,9 @@ OpenVINOPretrained::OpenVINOPretrained(const std::wstring& network_model_path, c
     size_t w = inputTensorDesc.getDims()[3];
     size_t h = inputTensorDesc.getDims()[2];
     size_t c = inputTensorDesc.getDims()[1];
+    L_ENSURE_EQ(c, 3);
+    _inputW = w;
+    _inputH = h;
 	
     _network.setBatchSize(1);
     if (preferGPU)
@@ -52,108 +55,73 @@ OpenVINOPretrained::OpenVINOPretrained(const std::wstring& network_model_path, c
 
     L_ENSURE(!(cpuDeviceName.empty() && gpuDeviceName.empty()));
 	
-    InferenceEngine::ExecutableNetwork executableNetwork;
-
     if (preferGPU && !gpuDeviceName.empty())
-        executableNetwork = core.LoadNetwork(_network, gpuDeviceName);
+        _executableNetwork = core.LoadNetwork(_network, gpuDeviceName);
     else
-        executableNetwork = core.LoadNetwork(_network, cpuDeviceName);
+        _executableNetwork = core.LoadNetwork(_network, cpuDeviceName);
 
 	
     // --------------------------- 5. Create infer request -------------------------------------------------
     
-    InferenceEngine::InferRequest inferRequest = executableNetwork.CreateInferRequest();
+    _inferRequest = _executableNetwork.CreateInferRequest();
 	
     // -----------------------------------------------------------------------------------------------------
 
     // --------------------------- 6. Prepare input --------------------------------------------------------
-    InferenceEngine::Blob::Ptr lrInputBlob = inferRequest.GetBlob("0");
+    InferenceEngine::Blob::Ptr lrInputBlob = _inferRequest.GetBlob("0");
+    _inputPtr = lrInputBlob->buffer().as<float*>();
 	
-    for (size_t i = 0; i < inputImages.size(); ++i) {
-        cv::Mat img = inputImages[i];
-        matU8ToBlob<float_t>(img, lrInputBlob, i);
-
-        bool twoInputs = inputInfo.size() == 2;
-        if (twoInputs) {
-            const std::string bicInputBlobName = "1";
-            Blob::Ptr bicInputBlob = inferRequest.GetBlob(bicInputBlobName);
-
-            int w = bicInputBlob->getTensorDesc().getDims()[3];
-            int h = bicInputBlob->getTensorDesc().getDims()[2];
-
-            cv::Mat resized;
-            cv::resize(img, resized, cv::Size(w, h), 0, 0, cv::INTER_CUBIC);
-
-            matU8ToBlob<float_t>(resized, bicInputBlob, i);
-        }
-    }
-    // -----------------------------------------------------------------------------------------------------
-
-    // --------------------------- 7. Do inference ---------------------------------------------------------
-    std::cout << "To close the application, press 'CTRL+C' here";
-    if (FLAGS_show) {
-        std::cout << " or switch to the output window and press any key";
-    }
-    std::cout << std::endl;
-
-    slog::info << "Start inference" << slog::endl;
-    inferRequest.Infer();
     // -----------------------------------------------------------------------------------------------------
 
     // --------------------------- 8. Process output -------------------------------------------------------
-    const Blob::Ptr outputBlob = inferRequest.GetBlob(firstOutputName);
-    const auto outputData = outputBlob->buffer().as<PrecisionTrait<Precision::FP32>::value_type*>();
+    const InferenceEngine::Blob::Ptr outputBlob = _inferRequest.GetBlob(outputName);
+    _outputPtr = outputBlob->buffer().as<float*>();
 
     size_t numOfImages = outputBlob->getTensorDesc().getDims()[0];
     size_t numOfChannels = outputBlob->getTensorDesc().getDims()[1];
-    size_t h = outputBlob->getTensorDesc().getDims()[2];
-    size_t w = outputBlob->getTensorDesc().getDims()[3];
-    size_t nunOfPixels = w * h;
+    size_t outputH = outputBlob->getTensorDesc().getDims()[2];
+    size_t outputW = outputBlob->getTensorDesc().getDims()[3];
 
-    slog::info << "Output size [N,C,H,W]: " << numOfImages << ", " << numOfChannels << ", " << h << ", " << w << slog::endl;
-
-    for (size_t i = 0; i < numOfImages; ++i) {
-        std::vector<cv::Mat> imgPlanes;
-        if (numOfChannels == 3) {
-            imgPlanes = std::vector<cv::Mat>{
-                  cv::Mat(h, w, CV_32FC1, &(outputData[i * nunOfPixels * numOfChannels])),
-                  cv::Mat(h, w, CV_32FC1, &(outputData[i * nunOfPixels * numOfChannels + nunOfPixels])),
-                  cv::Mat(h, w, CV_32FC1, &(outputData[i * nunOfPixels * numOfChannels + nunOfPixels * 2])) };
-        }
-        else {
-            imgPlanes = std::vector<cv::Mat>{ cv::Mat(h, w, CV_32FC1, &(outputData[i * nunOfPixels * numOfChannels])) };
-
-            // Post-processing for text-image-super-resolution models
-            cv::threshold(imgPlanes[0], imgPlanes[0], 0.5f, 1.0f, cv::THRESH_BINARY);
-        };
-
-        for (auto& img : imgPlanes)
-            img.convertTo(img, CV_8UC1, 255);
-
-        cv::Mat resultImg;
-        cv::merge(imgPlanes, resultImg);
-
-        if (FLAGS_show) {
-            cv::imshow("result", resultImg);
-            cv::waitKey();
-        }
-
-        std::string outImgName = std::string("sr_" + std::to_string(i + 1) + ".png");
-        cv::imwrite(outImgName, resultImg);
-    }
-    // -----------------------------------------------------------------------------------------------------
-}
-catch (const std::exception & error) {
-    slog::err << error.what() << slog::endl;
-    return 1;
-}
-catch (...) {
-    slog::err << "Unknown/internal exception happened" << slog::endl;
-    return 1;
+    L_ENSURE_EQ(numOfImages, 1);
+    L_ENSURE_EQ(numOfChannels, 3);
+    _outputH = outputH;
+    _outputW = outputW;	
 }
 
-slog::info << "Execution successful" << slog::endl;
-slog::info << slog::endl << "This demo is an API example, for any performance measurements "
-"please use the dedicated benchmark_app tool from the openVINO toolkit" << slog::endl;
-return 0;
+
+float* OpenVINOPretrained::getInputBuffer()
+{
+    return _inputPtr;
 }
+
+size_t OpenVINOPretrained::inputW()
+{
+    return _inputW;
+}
+
+size_t OpenVINOPretrained::inputH()
+{
+    return _inputH;
+}
+
+size_t OpenVINOPretrained::outputW()
+{
+    return _outputW;
+}
+
+size_t OpenVINOPretrained::outputH()
+{
+    return _outputH;
+}
+
+void OpenVINOPretrained::infer()
+{
+    _inferRequest.Infer();	
+}
+
+const float* OpenVINOPretrained::getOutputBuffer()
+{
+    return _outputPtr;
+}
+
+OpenVINOPretrained::~OpenVINOPretrained() = default;

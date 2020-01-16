@@ -15,8 +15,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(OpenVINOInferenceEnginePATH)include;$(OpenVINOInferenceEnginePATH)include\cpp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>
-      </PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       <AdditionalLibraryDirectories>$(OpenVINOInferenceEnginePATH)lib\intel64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

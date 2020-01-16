@@ -12,8 +12,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{9594DF38-C418-44A6-BCF2-4FD91525071D}</ProjectGuid>
-    <RootNamespace>SuperResolutionAlgorithmVisualizer</RootNamespace>
+    <ProjectGuid>{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}</ProjectGuid>
+    <RootNamespace>OpenVINOTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -37,17 +37,15 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\openvino.props" />
     <Import Project="..\base-libs\vcproj\debug.props" />
     <Import Project="..\base-libs.props" />
-    <Import Project="..\opencv.props" />
-    <Import Project="..\openvino.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\openvino.props" />
     <Import Project="..\base-libs\vcproj\release.props" />
     <Import Project="..\base-libs.props" />
-    <Import Project="..\opencv.props" />
-    <Import Project="..\openvino.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -61,32 +59,15 @@
     </ClCompile>
     <Link>
     </Link>
-    <Link>
-      <AdditionalDependencies>super_resolution.lib</AdditionalDependencies>
-    </Link>
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SuperResolution\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
     </ClCompile>
     <Link>
     </Link>
-    <Link>
-      <AdditionalDependencies>super_resolution.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\SuperResolution\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SuperResolution\SuperResolution.vcxproj">
-      <Project>{cf2fbe06-5c65-4f5b-8e5e-20dff67f5df3}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

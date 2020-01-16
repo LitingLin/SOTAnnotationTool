@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SuperResolution", "SuperRes
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SuperResolutionAlgorithmVisualizer", "SuperResolutionAlgorithmVisualizer\SuperResolutionAlgorithmVisualizer.vcxproj", "{9594DF38-C418-44A6-BCF2-4FD91525071D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenVINOTest", "OpenVINOTest\OpenVINOTest.vcxproj", "{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -117,6 +119,12 @@ Global
 		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Release|x64.ActiveCfg = Release|x64
 		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Release|x64.Build.0 = Release|x64
 		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Release|x86.ActiveCfg = Release|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Debug|x64.ActiveCfg = Debug|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Debug|x64.Build.0 = Debug|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Debug|x86.ActiveCfg = Debug|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x64.ActiveCfg = Release|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x64.Build.0 = Release|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

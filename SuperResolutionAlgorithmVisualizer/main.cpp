@@ -12,6 +12,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
+#include <super_resolution.h>
+
 int __stdcall wWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPWSTR lpCmdLine,
@@ -31,6 +33,11 @@ int __stdcall wWinMain(HINSTANCE hInstance,
 		cv::Mat RGBImage;
 		cv::cvtColor(image, RGBImage, cv::COLOR_BGR2RGB);
 
+		SuperResolutionAlgorithmFactory factory;
+		auto superResolutionAlgorithm = factory.createOpenVINOPretrainedModel(L"", L"", true);
+		auto inputH = superResolutionAlgorithm->inputH();
+		auto inputW = superResolutionAlgorithm->inputW();
+		cv::resize(image, RGBImage, cv::Size(inputW, inputH));
 		// do inference
 
 
