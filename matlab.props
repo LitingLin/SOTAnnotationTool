@@ -4,10 +4,7 @@
   <PropertyGroup Label="UserMacros">
     <Matlab_Dir>C:\Program Files\MATLAB\R2019b\</Matlab_Dir>
     <MatlabRuntime_Dir>$(Matlab_Dir)bin\win64\</MatlabRuntime_Dir>
-  </PropertyGroup>
-  <PropertyGroup>
-    <LocalDebuggerEnvironment>PATH=$(Matlab_Dir)bin\win64;%PATH%
-$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+    <VCRedistPaths>$(MatlabRuntime_Dir);$(VCRedistPaths)</VCRedistPaths>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

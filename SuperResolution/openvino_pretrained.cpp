@@ -15,7 +15,7 @@ OpenVINOPretrained::OpenVINOPretrained(const std::wstring& network_model_path, c
 	/** Taking information about all topology inputs **/
 	InferenceEngine::InputsDataMap inputInfo = _network.getInputsInfo();
 
-    L_ENSURE_EQ(inputInfo.size(), 1);
+    // L_ENSURE_EQ(inputInfo.size(), 1);
     auto& inputInfoItem = inputInfo.at("0");
     auto& inputTensorDesc = inputInfoItem->getTensorDesc();
     L_ENSURE_EQ(inputTensorDesc.getDims().size(), 4);

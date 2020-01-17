@@ -4,10 +4,7 @@
   <PropertyGroup Label="UserMacros">
     <OpenCVPATH>C:\Program Files (x86)\IntelSWTools\openvino\opencv\</OpenCVPATH>
     <OpenCVVersion>412</OpenCVVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <LocalDebuggerEnvironment>PATH=$(OpenCVPATH)bin;%PATH%
-</LocalDebuggerEnvironment>
+    <VCRedistPaths>$(OpenCVPATH)bin;$(VCRedistPaths)</VCRedistPaths>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
