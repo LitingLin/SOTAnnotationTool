@@ -86,6 +86,9 @@
     <ProjectReference Include="..\base-libs\vcproj\dynamic\base\base.vcxproj">
       <Project>{34b7c3f3-324a-4370-963e-8725df78c145}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\SuperResolution\SuperResolution.vcxproj">
+      <Project>{cf2fbe06-5c65-4f5b-8e5e-20dff67f5df3}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

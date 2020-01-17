@@ -14,23 +14,6 @@
 
 #include <super_resolution.h>
 
-inline void HWCToCHWAndUint8ToFloat(const unsigned char* input, float* output, size_t h, size_t w, size_t c)
-{
-	size_t channel_size = h * w;
-	for (size_t i_h = 0; i_h < h; ++i_h)
-	{
-		for (size_t i_w = 0; i_w < w; ++i_w)
-		{
-			for (size_t i_c = 0; i_c < c; ++i_c)
-			{
-				*(output + channel_size * i_c) = *input;
-				++input;
-			}
-			++output;
-		}
-	}
-}
-
 int __stdcall wWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPWSTR lpCmdLine,
@@ -44,21 +27,31 @@ int __stdcall wWinMain(HINSTANCE hInstance,
 		Base::File imageFile(imagePath);
 		Base::MemoryMappedIO imageMemoryMappedIO(&imageFile);
 
+		SuperResolutionAlgorithmInterface superResolutionAlgorithm(L"D:\\single-image-super-resolution-1032.xml", L"D:\\single-image-super-resolution-1032.bin");
+		auto inputH = superResolutionAlgorithm.inputH();
+		auto inputW = superResolutionAlgorithm.inputW();
+		auto outputH = superResolutionAlgorithm.outputH();
+		auto outputW = superResolutionAlgorithm.outputW();
+		
 		cv::Mat image = cv::imdecode(cv::_InputArray((unsigned char*)imageMemoryMappedIO.get(), imageFile.getSize()), cv::ImreadModes::IMREAD_COLOR);
+		if (inputH!=image.rows || inputW!=image.cols)
+		{
+			cv::resize(image, image, cv::Size(inputW, inputH));
+		}
 		cv::Mat RGBImage;
+		cv::cvtColor(image, RGBImage, cv::COLOR_BGR2RGB);
 
-		SuperResolutionAlgorithmFactory factory;
-		std::shared_ptr<SuperResolutionAlgorithmInterface> superResolutionAlgorithm(factory.createOpenVINOPretrainedModel(L"D:\\single-image-super-resolution-1032.xml", L"D:\\single-image-super-resolution-1032.bin", true), [&factory](auto p) {factory.destroy(p); });
-		auto inputH = superResolutionAlgorithm->inputH();
-		auto inputW = superResolutionAlgorithm->inputW();
-		cv::resize(image, RGBImage, cv::Size(inputW, inputH));
 		// do inference
-		float* inputPtr = superResolutionAlgorithm->getInputBuffer();
-		HWCToCHWAndUint8ToFloat(RGBImage.data, inputPtr, inputH, inputW, 3);
-		superResolutionAlgorithm->infer();
-		const float* outputPtr = superResolutionAlgorithm->getOutputBuffer();
+		superResolutionAlgorithm.setInputBuffer(RGBImage.data);
 
-		cv::imshow("test", image);
+		cv::Mat outputBuffer(outputH, outputW, CV_8UC3);
+		
+		superResolutionAlgorithm.setOutputBuffer(outputBuffer.data);
+		superResolutionAlgorithm.infer();
+
+		cv::cvtColor(outputBuffer, outputBuffer, cv::COLOR_RGB2BGR);
+		
+		cv::imshow("test", outputBuffer);
 		cv::waitKey();
 	}
 	catch (std::exception &e)
