@@ -3,14 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <OpenVINOInferenceEnginePATH>C:\Program Files (x86)\IntelSWTools\openvino\inference_engine\</OpenVINOInferenceEnginePATH>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerEnvironment>PATH=$(OpenVINOInferenceEnginePATH)bin\intel64\Debug;%PATH%
-</LocalDebuggerEnvironment>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerEnvironment>PATH=$(OpenVINOInferenceEnginePATH)bin\intel64\Release;%PATH%
-</LocalDebuggerEnvironment>
+    <VCRedistPaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OpenVINOInferenceEnginePATH)bin\intel64\Debug;$(VCRedistPaths)</VCRedistPaths>
+    <VCRedistPaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OpenVINOInferenceEnginePATH)bin\intel64\Release;$(VCRedistPaths)</VCRedistPaths>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>

@@ -18,6 +18,14 @@
     <ClCompile Include="openvino_pretrained.cpp" />
     <ClCompile Include="super_resolution.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base-libs\vcproj\3rd_party\fmt\fmt.vcxproj">
+      <Project>{0648da17-fc38-43ac-9c51-99cd61d46b94}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\base-libs\vcproj\dynamic\base\logging\logging.vcxproj">
+      <Project>{dd05e230-eb4d-4507-93f7-e3a3ba7e8e7e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}</ProjectGuid>

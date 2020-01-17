@@ -41,13 +41,15 @@
     <Import Project="..\base-libs.props" />
     <Import Project="..\opencv.props" />
     <Import Project="..\openvino.props" />
+    <Import Project="..\debugger-path.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\base-libs\vcproj\release.props" />
     <Import Project="..\base-libs.props" />
-    <Import Project="..\opencv.props" />
     <Import Project="..\openvino.props" />
+    <Import Project="..\opencv.props" />
+    <Import Project="..\debugger-path.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -62,7 +64,7 @@
     <Link>
     </Link>
     <Link>
-      <AdditionalDependencies>super_resolution.lib</AdditionalDependencies>
+      <AdditionalDependencies>SuperResolution.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)..\SuperResolution\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -74,15 +76,15 @@
     <Link>
     </Link>
     <Link>
-      <AdditionalDependencies>super_resolution.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SuperResolution.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)..\SuperResolution\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SuperResolution\SuperResolution.vcxproj">
-      <Project>{cf2fbe06-5c65-4f5b-8e5e-20dff67f5df3}</Project>
+    <ProjectReference Include="..\base-libs\vcproj\dynamic\base\base.vcxproj">
+      <Project>{34b7c3f3-324a-4370-963e-8725df78c145}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
