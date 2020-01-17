@@ -25,6 +25,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "base-libs\vcproj\dy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnnotationTool.Resources", "AnnotationTool.Resources\AnnotationTool.Resources.csproj", "{1C6FF319-3F34-4675-8724-F87A1B77ED9E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SuperResolution", "SuperResolution\SuperResolution.vcxproj", "{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SuperResolutionAlgorithmVisualizer", "SuperResolutionAlgorithmVisualizer\SuperResolutionAlgorithmVisualizer.vcxproj", "{9594DF38-C418-44A6-BCF2-4FD91525071D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenVINOTest", "OpenVINOTest\OpenVINOTest.vcxproj", "{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +137,30 @@ Global
 		{1C6FF319-3F34-4675-8724-F87A1B77ED9E}.Release|x64.Build.0 = Release|Any CPU
 		{1C6FF319-3F34-4675-8724-F87A1B77ED9E}.Release|x86.ActiveCfg = Release|Any CPU
 		{1C6FF319-3F34-4675-8724-F87A1B77ED9E}.Release|x86.Build.0 = Release|Any CPU
+		{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}.Debug|x64.ActiveCfg = Debug|x64
+		{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}.Debug|x64.Build.0 = Debug|x64
+		{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}.Debug|x86.ActiveCfg = Debug|x64
+		{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}.Release|Any CPU.ActiveCfg = Release|x64
+		{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}.Release|x64.ActiveCfg = Release|x64
+		{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}.Release|x64.Build.0 = Release|x64
+		{CF2FBE06-5C65-4F5B-8E5E-20DFF67F5DF3}.Release|x86.ActiveCfg = Release|x64
+		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Debug|x64.ActiveCfg = Debug|x64
+		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Debug|x64.Build.0 = Debug|x64
+		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Debug|x86.ActiveCfg = Debug|x64
+		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Release|Any CPU.ActiveCfg = Release|x64
+		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Release|x64.ActiveCfg = Release|x64
+		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Release|x64.Build.0 = Release|x64
+		{9594DF38-C418-44A6-BCF2-4FD91525071D}.Release|x86.ActiveCfg = Release|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Debug|x64.ActiveCfg = Debug|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Debug|x64.Build.0 = Debug|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Debug|x86.ActiveCfg = Debug|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|Any CPU.ActiveCfg = Release|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x64.ActiveCfg = Release|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x64.Build.0 = Release|x64
+		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
