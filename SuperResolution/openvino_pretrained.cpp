@@ -27,10 +27,6 @@ OpenVINOPretrained::OpenVINOPretrained(const std::wstring& network_model_path, c
     _inputH = h;
 	
     _network.setBatchSize(1);
-    if (preferGPU)
-        _network.setTargetDevice(InferenceEngine::TargetDevice::eGPU);
-    else
-        _network.setTargetDevice(InferenceEngine::TargetDevice::eCPU);
 
     auto outputsInfo = _network.getOutputsInfo();
     L_ENSURE_EQ(outputsInfo.size(), 1);
