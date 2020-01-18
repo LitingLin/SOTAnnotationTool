@@ -11,10 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="block_based_super_resolution.h" />
     <ClInclude Include="include\super_resolution.h" />
     <ClInclude Include="openvino_pretrained.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="block_based_super_resolution.cpp" />
     <ClCompile Include="openvino_pretrained.cpp" />
     <ClCompile Include="super_resolution.cpp" />
   </ItemGroup>

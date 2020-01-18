@@ -24,12 +24,18 @@
     <ClInclude Include="openvino_pretrained.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="block_based_super_resolution.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="super_resolution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="openvino_pretrained.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="block_based_super_resolution.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
