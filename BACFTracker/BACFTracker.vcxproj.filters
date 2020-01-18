@@ -25,9 +25,6 @@
     <Filter Include="Source Files\piotr_fhog">
       <UniqueIdentifier>{e5692eeb-b5b7-4b77-9026-6a47e45b4d87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\include">
-      <UniqueIdentifier>{b7dcb5c0-63dd-4465-9a0a-9fa7d49a8002}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kcf.h">
@@ -51,8 +48,8 @@
     <ClInclude Include="piotr_fhog\gradientMex.h">
       <Filter>Header Files\piotr_fhog</Filter>
     </ClInclude>
-    <ClInclude Include="include\bacf_tracker.h">
-      <Filter>Header Files\include</Filter>
+    <ClInclude Include="bacf_tracker.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

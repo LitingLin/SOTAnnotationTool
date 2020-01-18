@@ -67,9 +67,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bacf_tracker.h" />
     <ClInclude Include="cn\cnfeat.hpp" />
     <ClInclude Include="complexmat.hpp" />
-    <ClInclude Include="include\bacf_tracker.h" />
     <ClInclude Include="kcf.h" />
     <ClInclude Include="piotr_fhog\fhog.hpp" />
     <ClInclude Include="piotr_fhog\gradientMex.h" />

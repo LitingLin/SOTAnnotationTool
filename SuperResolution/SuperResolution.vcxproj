@@ -11,14 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="block_based_super_resolution.h" />
-    <ClInclude Include="include\super_resolution.h" />
+    <ClInclude Include="region_based_super_resolution.h" />
     <ClInclude Include="openvino_pretrained.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="block_based_super_resolution.cpp" />
+    <ClCompile Include="region_based_super_resolution.cpp" />
     <ClCompile Include="openvino_pretrained.cpp" />
-    <ClCompile Include="super_resolution.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\base-libs\vcproj\3rd_party\fmt\fmt.vcxproj">
@@ -83,6 +81,10 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>COMPILING_SUPER_RESOLUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy "single-image-super-resolution-1032.bin" "$(OutputPath)" /D /Y
+xcopy "single-image-super-resolution-1032.xml" "$(OutputPath)" /D /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -93,6 +95,10 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>COMPILING_SUPER_RESOLUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy "single-image-super-resolution-1032.bin" "$(OutputPath)" /D /Y
+xcopy "single-image-super-resolution-1032.xml" "$(OutputPath)" /D /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

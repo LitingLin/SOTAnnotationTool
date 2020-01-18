@@ -12,7 +12,8 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include <super_resolution.h>
+#include <region_based_super_resolution.h>
+
 
 int __stdcall wWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -27,27 +28,21 @@ int __stdcall wWinMain(HINSTANCE hInstance,
 		Base::File imageFile(imagePath);
 		Base::MemoryMappedIO imageMemoryMappedIO(&imageFile);
 
-		SuperResolutionAlgorithmInterface superResolutionAlgorithm(L"D:\\single-image-super-resolution-1032.xml", L"D:\\single-image-super-resolution-1032.bin");
-		auto inputH = superResolutionAlgorithm.inputH();
-		auto inputW = superResolutionAlgorithm.inputW();
-		auto outputH = superResolutionAlgorithm.outputH();
-		auto outputW = superResolutionAlgorithm.outputW();
+		std::wstring moduleParentPath = Base::getParentPath(Base::getApplicationPath());
+		
+		RegionBasedSuperResolution superResolutionAlgorithm(Base::appendPath(moduleParentPath, L"single-image-super-resolution-1032.xml"), Base::appendPath(moduleParentPath, L"single-image-super-resolution-1032.bin"));
 		
 		cv::Mat image = cv::imdecode(cv::_InputArray((unsigned char*)imageMemoryMappedIO.get(), imageFile.getSize()), cv::ImreadModes::IMREAD_COLOR);
-		if (inputH!=image.rows || inputW!=image.cols)
-		{
-			cv::resize(image, image, cv::Size(inputW, inputH));
-		}
 		cv::Mat RGBImage;
 		cv::cvtColor(image, RGBImage, cv::COLOR_BGR2RGB);
 
-		// do inference
-		superResolutionAlgorithm.setInputBuffer(RGBImage.data);
+		superResolutionAlgorithm.setSourceImage(RGBImage.data, RGBImage.cols, RGBImage.rows);
 
-		cv::Mat outputBuffer(outputH, outputW, CV_8UC3);
+		auto scale = superResolutionAlgorithm.scalingRatio();
+		cv::Mat outputBuffer(RGBImage.rows * scale, RGBImage.cols * scale, CV_8UC3);
 		
-		superResolutionAlgorithm.setOutputBuffer(outputBuffer.data);
-		superResolutionAlgorithm.infer();
+		auto result = superResolutionAlgorithm.process(0, 0, RGBImage.cols, RGBImage.rows);
+		result.copyTo(outputBuffer.data);
 
 		cv::cvtColor(outputBuffer, outputBuffer, cv::COLOR_RGB2BGR);
 		

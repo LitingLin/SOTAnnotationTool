@@ -8,15 +8,15 @@
 
 #include <tuple>
 
-class KCF_Tracker;
+#include "kcf.h"
 
 class BACF_TRACKER_INTERFACE BACFTracker
 {
 public:
 	BACFTracker();
+	~BACFTracker();
 	void initialize(unsigned char* image, int width, int height, int boundingBoxX, int boundingBoxY, int boundingBoxWidth, int boundingBoxHeight);
 	std::tuple<int, int, int, int> predict(unsigned char* image, int width, int height);
-	~BACFTracker();
 private:
-	KCF_Tracker* _tracker;
+	KCF_Tracker _tracker;
 };

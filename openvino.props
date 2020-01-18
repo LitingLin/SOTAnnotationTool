@@ -3,8 +3,11 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <OpenVINOInferenceEnginePATH>C:\Program Files (x86)\IntelSWTools\openvino\inference_engine\</OpenVINOInferenceEnginePATH>
-    <VCRedistPaths Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OpenVINOInferenceEnginePATH)bin\intel64\Debug;$(VCRedistPaths)</VCRedistPaths>
-    <VCRedistPaths Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OpenVINOInferenceEnginePATH)bin\intel64\Release;$(VCRedistPaths)</VCRedistPaths>
+    <OpenVINOInferenceEngineRuntimePATH Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OpenVINOInferenceEnginePATH)bin\intel64\Debug\</OpenVINOInferenceEngineRuntimePATH>
+    <OpenVINOInferenceEngineRuntimePATH Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OpenVINOInferenceEnginePATH)bin\intel64\Release\</OpenVINOInferenceEngineRuntimePATH>
+    <OpenVINOInferenceEngineLibPATH Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OpenVINOInferenceEnginePATH)lib\intel64\Debug\</OpenVINOInferenceEngineLibPATH>
+    <OpenVINOInferenceEngineLibPATH Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OpenVINOInferenceEnginePATH)lib\intel64\Release\</OpenVINOInferenceEngineLibPATH>
+    <VCRedistPaths>$(OpenVINOInferenceEngineRuntimePATH);$(VCRedistPaths)</VCRedistPaths>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -12,21 +15,11 @@
       <PreprocessorDefinitions>_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      <AdditionalLibraryDirectories>$(OpenVINOInferenceEnginePATH)lib\intel64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies Condition="'$(CLRSupport)'=='false'">inference_engined.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AssemblyLinkResource Condition="'$(CLRSupport)'!='false'">$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll;$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
+      <AdditionalDependencies>$(OpenVINOInferenceEngineLibPATH)inference_engined.lib;%(AdditionalDependencies)</AdditionalDependencies>      
     </Link>
     <Link Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      <AdditionalLibraryDirectories>$(OpenVINOInferenceEnginePATH)lib\intel64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies Condition="'$(CLRSupport)'=='false'">inference_engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AssemblyLinkResource Condition="'$(CLRSupport)'!='false'">$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll;$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
+      <AdditionalDependencies>$(OpenVINOInferenceEngineLibPATH)inference_engine.lib;%(AdditionalDependencies)</AdditionalDependencies>      
     </Link>
-    <PostBuildEvent>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll" "$(OutputPath)" /D /Y
-xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll" "$(OutputPath)" /D /Y</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll" "$(OutputPath)" /D /Y
-xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll" "$(OutputPath)" /D /Y</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="OpenVINOInferenceEnginePATH">

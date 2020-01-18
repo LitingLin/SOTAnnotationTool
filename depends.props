@@ -1,12 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
-  <PropertyGroup Label="UserMacros">
-    <MatlabRuntime_Dir>$(Matlab_Dir)bin\win64\</MatlabRuntime_Dir>
-  </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AssemblyLinkResource>$(MatlabRuntime_Dir)libmat.dll;$(MatlabRuntime_Dir)libmx.dll;$(MatlabRuntime_Dir)libmwfl.dll;$(MatlabRuntime_Dir)mwboost_date_time-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_filesystem-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_log-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_serialization-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_system-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_thread-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_chrono-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)libmwresource_core.dll;$(MatlabRuntime_Dir)libmwcpp11compat.dll;$(MatlabRuntime_Dir)icuuc61.dll;$(MatlabRuntime_Dir)icuio61.dll;$(MatlabRuntime_Dir)libexpat.dll;$(MatlabRuntime_Dir)hdf5.dll;$(MatlabRuntime_Dir)icudt61.dll;$(MatlabRuntime_Dir)libut.dll;$(MatlabRuntime_Dir)libmwmfl_permute.dll;$(MatlabRuntime_Dir)libmwindexingapimethods.dll;$(MatlabRuntime_Dir)libmwi18n.dll;$(MatlabRuntime_Dir)libmwfoundation_usm.dll;</AssemblyLinkResource>
+      <AssemblyLinkResource>$(OutputPath)base.dll;$(OutputPath)logging.dll;
+$(MatlabRuntime_Dir)libmat.dll;$(MatlabRuntime_Dir)libmx.dll;$(MatlabRuntime_Dir)libmwfl.dll;$(MatlabRuntime_Dir)mwboost_date_time-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_filesystem-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_log-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_serialization-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_system-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_thread-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)mwboost_chrono-vc141-mt-1_65_1.dll;$(MatlabRuntime_Dir)libmwresource_core.dll;$(MatlabRuntime_Dir)libmwcpp11compat.dll;$(MatlabRuntime_Dir)icuuc61.dll;$(MatlabRuntime_Dir)icuio61.dll;$(MatlabRuntime_Dir)libexpat.dll;$(MatlabRuntime_Dir)hdf5.dll;$(MatlabRuntime_Dir)icudt61.dll;$(MatlabRuntime_Dir)libut.dll;$(MatlabRuntime_Dir)libmwmfl_permute.dll;$(MatlabRuntime_Dir)libmwindexingapimethods.dll;$(MatlabRuntime_Dir)libmwi18n.dll;$(MatlabRuntime_Dir)libmwfoundation_usm.dll;$(MatlabRuntime_Dir)icuin61.dll;$(MatlabRuntime_Dir)zlib1.dll;$(MatlabRuntime_Dir)msvcr120.dll;
+$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll;$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll;
+%(AssemblyLinkResource)</AssemblyLinkResource>
+      <AssemblyLinkResource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OpenCVPATH)bin\opencv_core$(OpenCVVersion)d.dll;$(OpenCVPATH)bin\opencv_imgproc$(OpenCVVersion)d.dll;
+$(OpenVINOInferenceEngineRuntimePATH)cpu_extension_avx2.dll;$(OpenVINOInferenceEngineRuntimePATH)HeteroPlugind.dll;$(OpenVINOInferenceEngineRuntimePATH)inference_engined.dll;$(OpenVINOInferenceEngineRuntimePATH)mkl_tiny_tbb_debug.dll;$(OpenVINOInferenceEngineRuntimePATH)MKLDNNPlugind.dll;$(OpenVINOInferenceEngineRuntimePATH)MultiDevicePlugind.dll;$(OpenVINOInferenceEngineRuntimePATH)plugins.xml;$(OpenVINOInferenceEngineRuntimePATH)tbb_debug.dll;$(OpenVINOInferenceEngineRuntimePATH)tbbmalloc_debug.dll;
+%(AssemblyLinkResource)</AssemblyLinkResource>
+      <AssemblyLinkResource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OpenCVPATH)bin\opencv_core$(OpenCVVersion).dll;$(OpenCVPATH)bin\opencv_imgproc$(OpenCVVersion).dll;
+$(OpenVINOInferenceEngineRuntimePATH)cpu_extension_avx2.dll;$(OpenVINOInferenceEngineRuntimePATH)HeteroPlugin.dll;$(OpenVINOInferenceEngineRuntimePATH)inference_engine.dll;$(OpenVINOInferenceEngineRuntimePATH)mkl_tiny_tbb.dll;$(OpenVINOInferenceEngineRuntimePATH)MKLDNNPlugin.dll;$(OpenVINOInferenceEngineRuntimePATH)MultiDevicePlugin.dll;$(OpenVINOInferenceEngineRuntimePATH)plugins.xml;
+%(AssemblyLinkResource)</AssemblyLinkResource>
     </Link>
+    <PostBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">xcopy "$(MatlabRuntime_Dir)libmat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmx.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwfl.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_date_time-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_filesystem-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_log-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_serialization-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_system-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_thread-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_chrono-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwresource_core.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwcpp11compat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuuc61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuio61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libexpat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)hdf5.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icudt61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuin61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libut.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)zlib1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)msvcr120.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwmfl_permute.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwindexingapimethods.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwi18n.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwfoundation_usm.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenCVPATH)bin\opencv_core$(OpenCVVersion)d.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenCVPATH)bin\opencv_imgproc$(OpenCVVersion)d.dll" "$(OutputPath)" /D /Y
+
+xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)cpu_extension_avx2.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)HeteroPlugind.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)inference_engined.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)mkl_tiny_tbb_debug.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)MKLDNNPlugind.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)MultiDevicePlugind.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)plugins.xml" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)tbb_debug.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)tbbmalloc_debug.dll" "$(OutputPath)" /D /Y</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">xcopy "$(MatlabRuntime_Dir)libmat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmx.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwfl.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_date_time-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_filesystem-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_log-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_serialization-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_system-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_thread-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)mwboost_chrono-vc141-mt-1_65_1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwresource_core.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwcpp11compat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuuc61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuio61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libexpat.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)hdf5.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icudt61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)icuin61.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libut.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)zlib1.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)msvcr120.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwmfl_permute.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwindexingapimethods.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwi18n.dll" "$(OutputPath)" /D /Y
+xcopy "$(MatlabRuntime_Dir)libmwfoundation_usm.dll" "$(OutputPath)" /D /Y
+
+xcopy "$(OpenCVPATH)bin\opencv_core$(OpenCVVersion).dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenCVPATH)bin\opencv_imgproc$(OpenCVVersion).dll" "$(OutputPath)" /D /Y
+
+xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbb.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEnginePATH)bin\intel64\Release\tbbmalloc.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)cpu_extension_avx2.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)HeteroPlugin.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)inference_engine.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)mkl_tiny_tbb.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)MKLDNNPlugin.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)MultiDevicePlugin.dll" "$(OutputPath)" /D /Y
+xcopy "$(OpenVINOInferenceEngineRuntimePATH)plugins.xml" "$(OutputPath)" /D /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
 </Project>

@@ -8,9 +8,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)base-libs\include;$(SolutionDir)base-libs\3rd_party\fmt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(OutputPath);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>$(OutputPath)base.lib;$(OutputPath)fmt.lib;$(OutputPath)logging.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AssemblyLinkResource Condition="'$(CLRSupport)'!='false'">$(OutputPath)base.dll;$(OutputPath)logging.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

@@ -1,9 +1,14 @@
 #pragma once
 
+#if defined COMPILING_SUPER_RESOLUTION && defined _WINDLL
+#define SUPER_RESOLUTION_INTERFACE __declspec(dllexport)
+#else
+#define SUPER_RESOLUTION_INTERFACE
+#endif
+
 // https://arxiv.org/pdf/1807.06779.pdf
 
-#include <super_resolution.h>
-
+#include <string>
 #include <string_view>
 #include <tuple>
 #include <inference_engine.hpp>
@@ -56,10 +61,11 @@ private:
 	float* _outputPtr;
 };
 
-class SuperResolutionAlgorithm
+class SUPER_RESOLUTION_INTERFACE SuperResolutionAlgorithm
 {
 public:
 	SuperResolutionAlgorithm(const std::wstring& network_model_path, const std::wstring& network_weights_path);
+	~SuperResolutionAlgorithm();
 	size_t inputW();
 	size_t inputH();
 	size_t outputW();

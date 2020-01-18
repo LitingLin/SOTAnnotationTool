@@ -1,0 +1,1274 @@
+<?xml version="1.0"?>
+<net name="single-image-super-resolution-1032" version="6" batch="1">
+	<layers>
+		<layer name="87/Output_0/Data__const" type="Const" precision="I32" id="0">
+			<output>
+				<port id="0">
+					<dim>4</dim>
+				</port>
+			</output>
+			<blobs>
+				<custom offset="0" size="16" />
+			</blobs>
+		</layer>
+		<layer name="80/Output_0/Data__const" type="Const" precision="I32" id="1">
+			<output>
+				<port id="0">
+					<dim>6</dim>
+				</port>
+			</output>
+			<blobs>
+				<custom offset="16" size="24" />
+			</blobs>
+		</layer>
+		<layer name="124/Output_0/Data__const" type="Const" precision="I32" id="2">
+			<output>
+				<port id="0">
+					<dim>4</dim>
+				</port>
+			</output>
+			<blobs>
+				<custom offset="40" size="16" />
+			</blobs>
+		</layer>
+		<layer name="117/Output_0/Data__const" type="Const" precision="I32" id="3">
+			<output>
+				<port id="0">
+					<dim>6</dim>
+				</port>
+			</output>
+			<blobs>
+				<custom offset="56" size="24" />
+			</blobs>
+		</layer>
+		<layer name="1" type="Input" precision="FP32" id="4">
+			<output>
+				<port id="0">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="Mul_" type="Power" precision="FP32" id="5">
+			<data power="1.000000" scale="0.003922" shift="0.000000" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="24" type="Convolution" precision="FP32" id="6">
+			<data dilations="1,1" group="1" kernel="3,3" output="8" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+			<blobs>
+				<biases offset="80" size="32" />
+				<weights offset="112" size="864" />
+			</blobs>
+		</layer>
+		<layer name="25" type="ReLU" precision="FP32" id="7">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="26" type="Convolution" precision="FP32" id="8">
+			<data dilations="1,1" group="1" kernel="3,3" output="1" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>1</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+			<blobs>
+				<biases offset="976" size="4" />
+				<weights offset="980" size="288" />
+			</blobs>
+		</layer>
+		<layer name="27" type="sigmoid" precision="FP32" id="9">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>1</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>1</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="0" type="Input" precision="FP32" id="10">
+			<output>
+				<port id="0">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="28" type="Convolution" precision="FP32" id="11">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="FP32" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<biases offset="1268" size="64" />
+				<weights offset="1332" size="1728" />
+			</blobs>
+		</layer>
+		<layer name="29" type="ReLU" precision="FP32" id="12">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="30" type="ReLU" precision="FP32" id="13">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="31" type="Convolution" precision="FP32" id="14">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<weights offset="3060" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="32" type="ReLU" precision="FP32" id="15">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="33" type="Convolution" precision="FP32" id="16">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<weights offset="12276" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="34" type="Eltwise" precision="FP32" id="17">
+			<data operation="sum" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="35" type="ReLU" precision="FP32" id="18">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="36" type="Convolution" precision="FP32" id="19">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<weights offset="21492" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="37" type="ReLU" precision="FP32" id="20">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="38" type="Convolution" precision="FP32" id="21">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<weights offset="30708" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="39" type="Eltwise" precision="FP32" id="22">
+			<data operation="sum" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="40" type="ReLU" precision="FP32" id="23">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="41" type="Convolution" precision="FP32" id="24">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<weights offset="39924" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="42" type="ReLU" precision="FP32" id="25">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="43" type="Convolution" precision="FP32" id="26">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<weights offset="49140" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="44" type="Eltwise" precision="FP32" id="27">
+			<data operation="sum" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="45" type="ReLU" precision="FP32" id="28">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="46" type="Convolution" precision="FP32" id="29">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<weights offset="58356" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="47" type="ReLU" precision="FP32" id="30">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="48" type="Convolution" precision="FP32" id="31">
+			<data dilations="1,1" group="1" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<weights offset="67572" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="49" type="Eltwise" precision="FP32" id="32">
+			<data operation="sum" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="50" type="Concat" precision="FP32" id="33">
+			<data axis="1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="2">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="3">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="4">
+					<dim>1</dim>
+					<dim>16</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="5">
+					<dim>1</dim>
+					<dim>80</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="51" type="Convolution" precision="FP32" id="34">
+			<data dilations="1,1" group="1" kernel="3,3" output="8" pads_begin="1,1" pads_end="1,1" quantization_level="FP32" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>80</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<biases offset="76788" size="32" />
+				<weights offset="76820" size="23040" />
+			</blobs>
+		</layer>
+		<layer name="52" type="ReLU" precision="FP32" id="35">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="53" type="Convolution" precision="FP32" id="36">
+			<data dilations="1,1" group="1" kernel="3,3" output="32" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>32</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+			<blobs>
+				<biases offset="99860" size="128" />
+				<weights offset="99988" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="81" type="Reshape" precision="FP32" id="37">
+			<data dim="" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>32</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+				<port id="1">
+					<dim>6</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>2</dim>
+					<dim>2</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="82" type="Permute" precision="FP32" id="38">
+			<data order="0,1,4,2,5,3" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>2</dim>
+					<dim>2</dim>
+					<dim>270</dim>
+					<dim>480</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>270</dim>
+					<dim>2</dim>
+					<dim>480</dim>
+					<dim>2</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="88" type="Reshape" precision="FP32" id="39">
+			<data dim="" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>270</dim>
+					<dim>2</dim>
+					<dim>480</dim>
+					<dim>2</dim>
+				</port>
+				<port id="1">
+					<dim>4</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>540</dim>
+					<dim>960</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="89" type="ReLU" precision="FP32" id="40">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>540</dim>
+					<dim>960</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>540</dim>
+					<dim>960</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="90" type="Convolution" precision="FP32" id="41">
+			<data dilations="1,1" group="1" kernel="3,3" output="32" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>540</dim>
+					<dim>960</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>32</dim>
+					<dim>540</dim>
+					<dim>960</dim>
+				</port>
+			</output>
+			<blobs>
+				<biases offset="109204" size="128" />
+				<weights offset="109332" size="9216" />
+			</blobs>
+		</layer>
+		<layer name="118" type="Reshape" precision="FP32" id="42">
+			<data dim="" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>32</dim>
+					<dim>540</dim>
+					<dim>960</dim>
+				</port>
+				<port id="1">
+					<dim>6</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>2</dim>
+					<dim>2</dim>
+					<dim>540</dim>
+					<dim>960</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="119" type="Permute" precision="FP32" id="43">
+			<data order="0,1,4,2,5,3" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>2</dim>
+					<dim>2</dim>
+					<dim>540</dim>
+					<dim>960</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>540</dim>
+					<dim>2</dim>
+					<dim>960</dim>
+					<dim>2</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="125" type="Reshape" precision="FP32" id="44">
+			<data dim="" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>540</dim>
+					<dim>2</dim>
+					<dim>960</dim>
+					<dim>2</dim>
+				</port>
+				<port id="1">
+					<dim>4</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="126" type="ReLU" precision="FP32" id="45">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="127" type="Convolution" precision="FP32" id="46">
+			<data dilations="1,1" group="1" kernel="3,3" output="3" pads_begin="1,1" pads_end="1,1" quantization_level="I8" strides="1,1" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>8</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+			<blobs>
+				<biases offset="118548" size="12" />
+				<weights offset="118560" size="864" />
+			</blobs>
+		</layer>
+		<layer name="128" type="Eltwise" precision="FP32" id="47">
+			<data operation="prod" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>1</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+		</layer>
+		<layer name="129" type="Eltwise" precision="FP32" id="48">
+			<data operation="sum" />
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+				<port id="1">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</input>
+			<output>
+				<port id="2">
+					<dim>1</dim>
+					<dim>3</dim>
+					<dim>1080</dim>
+					<dim>1920</dim>
+				</port>
+			</output>
+		</layer>
+	</layers>
+	<edges>
+		<edge from-layer="0" from-port="0" to-layer="39" to-port="1" />
+		<edge from-layer="1" from-port="0" to-layer="37" to-port="1" />
+		<edge from-layer="2" from-port="0" to-layer="44" to-port="1" />
+		<edge from-layer="3" from-port="0" to-layer="42" to-port="1" />
+		<edge from-layer="4" from-port="0" to-layer="5" to-port="0" />
+		<edge from-layer="5" from-port="1" to-layer="48" to-port="1" />
+		<edge from-layer="5" from-port="1" to-layer="6" to-port="0" />
+		<edge from-layer="6" from-port="1" to-layer="7" to-port="0" />
+		<edge from-layer="7" from-port="1" to-layer="8" to-port="0" />
+		<edge from-layer="8" from-port="1" to-layer="9" to-port="0" />
+		<edge from-layer="9" from-port="1" to-layer="47" to-port="1" />
+		<edge from-layer="10" from-port="0" to-layer="11" to-port="0" />
+		<edge from-layer="11" from-port="1" to-layer="12" to-port="0" />
+		<edge from-layer="12" from-port="1" to-layer="13" to-port="0" />
+		<edge from-layer="12" from-port="1" to-layer="17" to-port="1" />
+		<edge from-layer="12" from-port="1" to-layer="33" to-port="0" />
+		<edge from-layer="13" from-port="1" to-layer="14" to-port="0" />
+		<edge from-layer="14" from-port="1" to-layer="15" to-port="0" />
+		<edge from-layer="15" from-port="1" to-layer="16" to-port="0" />
+		<edge from-layer="16" from-port="1" to-layer="17" to-port="0" />
+		<edge from-layer="17" from-port="2" to-layer="18" to-port="0" />
+		<edge from-layer="17" from-port="2" to-layer="22" to-port="1" />
+		<edge from-layer="17" from-port="2" to-layer="33" to-port="1" />
+		<edge from-layer="18" from-port="1" to-layer="19" to-port="0" />
+		<edge from-layer="19" from-port="1" to-layer="20" to-port="0" />
+		<edge from-layer="20" from-port="1" to-layer="21" to-port="0" />
+		<edge from-layer="21" from-port="1" to-layer="22" to-port="0" />
+		<edge from-layer="22" from-port="2" to-layer="23" to-port="0" />
+		<edge from-layer="22" from-port="2" to-layer="27" to-port="1" />
+		<edge from-layer="22" from-port="2" to-layer="33" to-port="2" />
+		<edge from-layer="23" from-port="1" to-layer="24" to-port="0" />
+		<edge from-layer="24" from-port="1" to-layer="25" to-port="0" />
+		<edge from-layer="25" from-port="1" to-layer="26" to-port="0" />
+		<edge from-layer="26" from-port="1" to-layer="27" to-port="0" />
+		<edge from-layer="27" from-port="2" to-layer="28" to-port="0" />
+		<edge from-layer="27" from-port="2" to-layer="32" to-port="1" />
+		<edge from-layer="27" from-port="2" to-layer="33" to-port="3" />
+		<edge from-layer="28" from-port="1" to-layer="29" to-port="0" />
+		<edge from-layer="29" from-port="1" to-layer="30" to-port="0" />
+		<edge from-layer="30" from-port="1" to-layer="31" to-port="0" />
+		<edge from-layer="31" from-port="1" to-layer="32" to-port="0" />
+		<edge from-layer="32" from-port="2" to-layer="33" to-port="4" />
+		<edge from-layer="33" from-port="5" to-layer="34" to-port="0" />
+		<edge from-layer="34" from-port="1" to-layer="35" to-port="0" />
+		<edge from-layer="35" from-port="1" to-layer="36" to-port="0" />
+		<edge from-layer="36" from-port="1" to-layer="37" to-port="0" />
+		<edge from-layer="37" from-port="2" to-layer="38" to-port="0" />
+		<edge from-layer="38" from-port="1" to-layer="39" to-port="0" />
+		<edge from-layer="39" from-port="2" to-layer="40" to-port="0" />
+		<edge from-layer="40" from-port="1" to-layer="41" to-port="0" />
+		<edge from-layer="41" from-port="1" to-layer="42" to-port="0" />
+		<edge from-layer="42" from-port="2" to-layer="43" to-port="0" />
+		<edge from-layer="43" from-port="1" to-layer="44" to-port="0" />
+		<edge from-layer="44" from-port="2" to-layer="45" to-port="0" />
+		<edge from-layer="45" from-port="1" to-layer="46" to-port="0" />
+		<edge from-layer="46" from-port="1" to-layer="47" to-port="0" />
+		<edge from-layer="47" from-port="2" to-layer="48" to-port="0" />
+	</edges>
+	<statistics>
+		<layer>
+			<name>0</name>
+			<min>0.000000, 0.000000, 0.000000</min>
+			<max>255.000000, 255.000000, 255.000000</max>
+		</layer>
+		<layer>
+			<name>1</name>
+			<min>0.000000, 0.000000, 0.000000</min>
+			<max>255.000000, 255.000000, 255.000000</max>
+		</layer>
+		<layer>
+			<name>125</name>
+			<min>-1515.384155, -435.081635, -1098.086426, -648.378357, -495.038788, -1100.346191, -1054.448975, -440.553864</min>
+			<max>713.714417, 941.598999, 870.758484, 1057.215942, 1287.202026, 674.238098, 671.828125, 836.208496</max>
+		</layer>
+		<layer>
+			<name>126</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>713.714417, 941.598999, 870.758484, 1057.215942, 1287.202026, 674.238098, 671.828125, 836.208496</max>
+		</layer>
+		<layer>
+			<name>127</name>
+			<min>-741.676758, -784.971008, -760.714783</min>
+			<max>764.943054, 803.277344, 774.515747</max>
+		</layer>
+		<layer>
+			<name>128</name>
+			<min>-1.298250, -1.399080, -1.347523</min>
+			<max>1.385914, 1.486974, 1.450054</max>
+		</layer>
+		<layer>
+			<name>129</name>
+			<min>-0.890685, -0.992353, -1.000830</min>
+			<max>1.844251, 1.915846, 1.854782</max>
+		</layer>
+		<layer>
+			<name>24</name>
+			<min>-0.999036, -0.401298, -2.544782, -0.963232, -0.469758, -1.104976, 0.433433, -0.449641</min>
+			<max>0.780368, 2.504814, 0.630945, -0.154228, 2.842761, 1.199995, 1.201933, 1.829249</max>
+		</layer>
+		<layer>
+			<name>25</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, 0.433433, -0.000000</min>
+			<max>0.780368, 2.504814, 0.630945, -0.000000, 2.842761, 1.199995, 1.201933, 1.829249</max>
+		</layer>
+		<layer>
+			<name>26</name>
+			<min>-9.391102</min>
+			<max>-3.245470</max>
+		</layer>
+		<layer>
+			<name>27</name>
+			<min>0.000083</min>
+			<max>0.037490</max>
+		</layer>
+		<layer>
+			<name>28</name>
+			<min>-0.173395, -1.000382, -1.096804, -0.209371, -2.846180, -0.638605, -0.179168, -8.174424, -1.109023, -0.068034, -2.606283, -0.173345, -0.124187, -1.729369, -1.151579, -1.082799</min>
+			<max>1.224482, 0.873528, 2.011124, 0.805844, 0.527950, 0.973435, 1.754753, 0.434152, 0.809021, 2.742296, 1.746418, 0.844233, 1.681338, 0.274450, 1.222690, 0.893975</max>
+		</layer>
+		<layer>
+			<name>29</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>1.224482, 0.873528, 2.011124, 0.805844, 0.527950, 0.973435, 1.754753, 0.434152, 0.809021, 2.742296, 1.746418, 0.844233, 1.681338, 0.274450, 1.222690, 0.893975</max>
+		</layer>
+		<layer>
+			<name>30</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>1.224482, 0.873528, 2.011124, 0.805844, 0.527950, 0.973435, 1.754753, 0.434152, 0.809021, 2.742296, 1.746418, 0.844233, 1.681338, 0.274450, 1.222690, 0.893975</max>
+		</layer>
+		<layer>
+			<name>31</name>
+			<min>-1.327490, -3.157310, -4.485973, -5.421379, -5.034587, -8.486456, -2.557190, -1.921501, -5.524184, -4.024970, -1.521081, -4.328866, -0.478874, -5.851768, -4.881278, -1.075305</min>
+			<max>-0.164229, 2.951856, 4.858615, 4.525085, 3.075932, 5.268485, 1.346243, 1.299896, 4.397894, 3.878225, -0.108231, 4.343891, 6.056257, 2.873143, 6.302601, -0.100670</max>
+		</layer>
+		<layer>
+			<name>32</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>-0.000000, 2.951856, 4.858615, 4.525085, 3.075932, 5.268485, 1.346243, 1.299896, 4.397894, 3.878225, -0.000000, 4.343891, 6.056257, 2.873143, 6.302601, -0.000000</max>
+		</layer>
+		<layer>
+			<name>33</name>
+			<min>-17.821543, -8.727856, -16.736252, -10.840893, -9.087980, -10.296736, -9.009723, -4.757019, -5.806427, -19.070063, -17.228516, -12.959414, -13.258642, -3.953758, -14.841039, -2.645720</min>
+			<max>6.371800, 10.219004, 6.248322, 1.925940, 6.542317, 8.852801, 1.382503, 4.547997, 6.852932, 1.916674, 2.709363, 8.329733, 7.494088, 4.166214, 7.778910, 7.093865</max>
+		</layer>
+		<layer>
+			<name>34</name>
+			<min>-17.504435, -8.562124, -16.736252, -10.478646, -9.087980, -10.201061, -9.003217, -4.757019, -5.806427, -18.649868, -17.110628, -12.797873, -13.104504, -3.953758, -14.745816, -2.597292</min>
+			<max>7.367670, 10.261065, 7.428729, 2.128346, 6.542317, 9.139996, 1.807687, 4.547997, 6.866742, 4.319603, 2.812026, 8.993991, 8.199290, 4.384628, 8.049129, 7.185329</max>
+		</layer>
+		<layer>
+			<name>35</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>7.367670, 10.261065, 7.428729, 2.128346, 6.542317, 9.139996, 1.807687, 4.547997, 6.866742, 4.319603, 2.812026, 8.993991, 8.199290, 4.384628, 8.049129, 7.185329</max>
+		</layer>
+		<layer>
+			<name>36</name>
+			<min>-22.363625, -4.569908, -30.933657, -22.642288, -7.410026, -16.498112, -13.382393, -13.949361, -8.055430, -9.908543, -12.623218, -19.994970, -12.943831, -5.888296, -6.598249, -13.770746</min>
+			<max>6.154356, 11.188399, 5.794249, 8.131283, 9.704466, 8.778566, 12.169127, 10.346923, 8.036662, 7.454558, 10.830630, 15.194324, 11.042672, 8.936812, 11.626196, 7.157769</max>
+		</layer>
+		<layer>
+			<name>37</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>6.154356, 11.188399, 5.794249, 8.131283, 9.704466, 8.778566, 12.169127, 10.346923, 8.036662, 7.454558, 10.830630, 15.194324, 11.042672, 8.936812, 11.626196, 7.157769</max>
+		</layer>
+		<layer>
+			<name>38</name>
+			<min>-4.791726, -11.756884, -7.658625, -3.334842, -9.910774, -11.511842, -7.848303, -10.247921, -12.630031, -11.871666, -16.197985, -10.471721, -10.387536, -16.137329, -3.819808, -17.961699</min>
+			<max>4.342458, 9.931929, 10.875351, 12.279404, 15.376740, 13.192199, 13.940208, 16.525011, 19.248095, 12.731878, 9.628491, 8.019440, 7.995242, 20.215654, 11.655748, 19.359341</max>
+		</layer>
+		<layer>
+			<name>39</name>
+			<min>-18.628908, -15.758299, -21.247375, -10.275905, -11.271797, -13.384289, -11.289600, -11.250650, -14.799970, -28.796989, -28.144600, -20.283888, -21.025665, -17.189888, -14.400808, -16.925739</min>
+			<max>10.276999, 18.460148, 16.757648, 12.896879, 14.611529, 20.625645, 14.851314, 18.806728, 24.242344, 14.459615, 10.628519, 14.442949, 11.079782, 20.914562, 14.561290, 21.098934</max>
+		</layer>
+		<layer>
+			<name>40</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>10.276999, 18.460148, 16.757648, 12.896879, 14.611529, 20.625645, 14.851314, 18.806728, 24.242344, 14.459615, 10.628519, 14.442949, 11.079782, 20.914562, 14.561290, 21.098934</max>
+		</layer>
+		<layer>
+			<name>41</name>
+			<min>-19.842678, -27.982943, -31.336386, -20.712162, -25.277637, -18.745989, -31.215754, -71.907326, -9.807331, -61.529018, -11.864392, -56.003304, -29.991505, -28.506966, -27.769247, -61.350758</min>
+			<max>24.737858, 32.988487, 24.912149, 33.873081, 25.605965, 23.275307, 28.303488, 30.144619, 23.875931, 22.931952, 36.479996, 13.931571, 39.988888, 22.712992, 29.039660, 30.620012</max>
+		</layer>
+		<layer>
+			<name>42</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>24.737858, 32.988487, 24.912149, 33.873081, 25.605965, 23.275307, 28.303488, 30.144619, 23.875931, 22.931952, 36.479996, 13.931571, 39.988888, 22.712992, 29.039660, 30.620012</max>
+		</layer>
+		<layer>
+			<name>43</name>
+			<min>-28.061152, -38.841190, -32.428711, -51.755287, -77.479874, -22.249256, -48.197483, -32.833862, -58.886379, -30.968798, -58.715965, -32.839230, -33.499878, -56.261791, -41.555004, -42.701061</min>
+			<max>35.909607, 37.040318, 21.230730, 27.784079, 31.828629, 23.738775, 52.837040, 48.106457, 53.652840, 41.230114, 43.483562, 35.792000, 41.464447, 57.709743, 45.896065, 46.271988</max>
+		</layer>
+		<layer>
+			<name>44</name>
+			<min>-42.672726, -42.228619, -47.436951, -54.238453, -81.224770, -24.141745, -42.881886, -35.904694, -62.456810, -44.965225, -74.563530, -41.516308, -35.451111, -54.813992, -43.241188, -52.159512</min>
+			<max>38.018417, 39.067707, 25.194777, 30.807880, 39.681015, 39.425739, 56.378437, 61.882500, 72.996735, 41.794277, 34.756706, 40.366356, 49.341118, 59.921139, 47.015354, 59.127865</max>
+		</layer>
+		<layer>
+			<name>45</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>38.018417, 39.067707, 25.194777, 30.807880, 39.681015, 39.425739, 56.378437, 61.882500, 72.996735, 41.794277, 34.756706, 40.366356, 49.341118, 59.921139, 47.015354, 59.127865</max>
+		</layer>
+		<layer>
+			<name>46</name>
+			<min>-72.474121, -122.686386, -113.417465, -154.308548, -11.486182, -79.996765, -38.529011, -67.130287, -104.937889, -122.054008, -98.074699, -91.364441, -79.286903, -114.476990, -145.191589, -85.770073</min>
+			<max>83.945038, 80.693039, 77.523872, 93.169044, 77.532684, 66.937943, 74.211494, 62.315968, 104.186256, 52.814453, 72.405106, 69.260612, 70.024185, 64.377205, 70.117439, 78.095879</max>
+		</layer>
+		<layer>
+			<name>47</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>83.945038, 80.693039, 77.523872, 93.169044, 77.532684, 66.937943, 74.211494, 62.315968, 104.186256, 52.814453, 72.405106, 69.260612, 70.024185, 64.377205, 70.117439, 78.095879</max>
+		</layer>
+		<layer>
+			<name>48</name>
+			<min>-67.387489, -71.029472, -57.508224, -59.948444, -28.899632, -69.825928, -63.327389, -154.669769, -62.307697, -81.051712, -69.823517, -62.977913, -74.019791, -72.440102, -71.875145, -78.939560</min>
+			<max>60.445755, 54.637890, 95.677681, 81.867638, 171.485733, 55.696281, 54.652016, 73.678207, 69.751686, 61.439110, 77.173637, 68.657372, 57.213127, 71.824562, 82.000473, 75.209007</max>
+		</layer>
+		<layer>
+			<name>49</name>
+			<min>-55.466515, -69.986557, -55.740555, -53.235527, -49.805756, -59.801472, -65.114258, -152.310425, -63.718857, -61.615532, -64.053162, -58.319279, -63.453770, -69.576965, -66.603500, -76.654907</min>
+			<max>55.152157, 54.313538, 87.674316, 69.713577, 139.491547, 62.348824, 51.988350, 95.779053, 66.690338, 47.028557, 58.465767, 59.133522, 57.017715, 84.002380, 77.969543, 73.231010</max>
+		</layer>
+		<layer>
+			<name>50</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -17.504435, -8.562124, -16.736252, -10.478646, -9.087980, -10.201061, -9.003217, -4.757019, -5.806427, -18.649868, -17.110628, -12.797873, -13.104504, -3.953758, -14.745816, -2.597292, -18.628908, -15.758299, -21.247375, -10.275905, -11.271797, -13.384289, -11.289600, -11.250650, -14.799970, -28.796989, -28.144600, -20.283888, -21.025665, -17.189888, -14.400808, -16.925739, -42.672726, -42.228619, -47.436951, -54.238453, -81.224770, -24.141745, -42.881886, -35.904694, -62.456810, -44.965225, -74.563530, -41.516308, -35.451111, -54.813992, -43.241188, -52.159512, -55.466515, -69.986557, -55.740555, -53.235527, -49.805756, -59.801472, -65.114258, -152.310425, -63.718857, -61.615532, -64.053162, -58.319279, -63.453770, -69.576965, -66.603500, -76.654907</min>
+			<max>1.224482, 0.873528, 2.011124, 0.805844, 0.527950, 0.973435, 1.754753, 0.434152, 0.809021, 2.742296, 1.746418, 0.844233, 1.681338, 0.274450, 1.222690, 0.893975, 7.367670, 10.261065, 7.428729, 2.128346, 6.542317, 9.139996, 1.807687, 4.547997, 6.866742, 4.319603, 2.812026, 8.993991, 8.199290, 4.384628, 8.049129, 7.185329, 10.276999, 18.460148, 16.757648, 12.896879, 14.611529, 20.625645, 14.851314, 18.806728, 24.242344, 14.459615, 10.628519, 14.442949, 11.079782, 20.914562, 14.561290, 21.098934, 38.018417, 39.067707, 25.194777, 30.807880, 39.681015, 39.425739, 56.378437, 61.882500, 72.996735, 41.794277, 34.756706, 40.366356, 49.341118, 59.921139, 47.015354, 59.127865, 55.152157, 54.313538, 87.674316, 69.713577, 139.491547, 62.348824, 51.988350, 95.779053, 66.690338, 47.028557, 58.465767, 59.133522, 57.017715, 84.002380, 77.969543, 73.231010</max>
+		</layer>
+		<layer>
+			<name>51</name>
+			<min>-27.823717, -127.415955, -63.536018, -86.604942, -99.446747, -24.455624, -66.135635, -49.007381</min>
+			<max>264.410278, 103.300789, 180.839859, 124.212204, 238.988983, 186.225479, 171.166092, 256.778229</max>
+		</layer>
+		<layer>
+			<name>52</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>264.410278, 103.300789, 180.839859, 124.212204, 238.988983, 186.225479, 171.166092, 256.778229</max>
+		</layer>
+		<layer>
+			<name>53</name>
+			<min>-283.439423, -337.059082, -274.395569, -138.217117, -260.906158, -360.208954, -290.292450, -351.666718, -175.335403, -81.855347, -197.064728, -239.124130, -176.104126, -311.772980, -355.804321, -282.951324, -257.553192, -358.448120, -235.183456, -420.277802, -344.274445, -256.107025, -381.786072, -319.157593, -279.652191, -299.793152, -262.979919, -311.013885, -225.338654, -58.985435, -202.564240, -172.109787</min>
+			<max>409.861877, 191.089401, 228.336456, 250.175949, 398.757446, 365.562836, 351.798401, 336.063782, 332.075073, 328.374329, 293.313782, 283.733276, 216.389374, 425.087708, -11.197089, 421.342377, 399.202423, 360.856201, 356.562836, 268.866425, 317.205200, 325.699738, 291.452515, 279.466248, 393.251831, 372.137726, 421.236847, 381.476868, 344.938141, 403.405121, 355.440155, 305.083954</max>
+		</layer>
+		<layer>
+			<name>88</name>
+			<min>-337.059082, -360.208954, -239.124130, -355.804321, -420.277802, -381.786072, -319.804138, -225.338654</min>
+			<max>409.861877, 398.757446, 332.818054, 425.087708, 419.102448, 326.427673, 425.814148, 403.405121</max>
+		</layer>
+		<layer>
+			<name>89</name>
+			<min>-0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000, -0.000000</min>
+			<max>409.861877, 398.757446, 332.818054, 425.087708, 419.102448, 326.427673, 425.814148, 403.405121</max>
+		</layer>
+		<layer>
+			<name>90</name>
+			<min>-404.763794, -534.151306, -1515.384155, -463.569702, -367.519073, -435.081635, -259.396210, -344.954193, -506.314423, -692.231628, -920.254822, -1098.086426, -530.884888, -207.970535, -426.528900, -648.378357, -280.881104, -295.606537, -495.038788, -429.253754, -1084.093018, -424.462311, -1083.297607, -713.690247, -1054.448975, -606.624207, -586.482178, -547.370728, -285.535156, -274.346375, -312.907074, -440.553864</min>
+			<max>678.301758, 597.983337, 679.771240, 627.932678, 890.012207, 842.463562, 871.112549, 846.399170, 457.140778, 832.717041, 801.775879, 474.601929, 564.094666, 366.274323, 1057.215942, 534.808167, 1287.202026, 585.348267, 469.136322, 423.115509, 666.900269, 632.613892, 658.519104, 360.545074, 322.964233, 671.828125, 590.013489, 591.234802, 487.438995, 422.717499, 807.068848, 807.112427</max>
+		</layer>
+		<layer>
+			<name>Mul_</name>
+			<min>0.000000, 0.000000, 0.000000</min>
+			<max>1.000000, 1.000000, 1.000000</max>
+		</layer>
+	</statistics>
+</net>

@@ -230,6 +230,8 @@ SuperResolutionAlgorithm::SuperResolutionAlgorithm(const std::wstring& network_m
 	_dataProcessor.setPostprocessInputPointer(_model.getOutputBuffer());
 }
 
+SuperResolutionAlgorithm::~SuperResolutionAlgorithm() = default;
+
 size_t SuperResolutionAlgorithm::inputW()
 {
 	return _model.inputW();

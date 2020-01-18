@@ -40,6 +40,7 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\depends.props" />
     <Import Project="..\base-libs.props" />
     <Import Project="..\base-libs\vcproj\debug.props" />
     <Import Project="..\matlab.props" />
@@ -48,6 +49,7 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\depends.props" />
     <Import Project="..\base-libs.props" />
     <Import Project="..\base-libs\vcproj\release.props" />
     <Import Project="..\matlab.props" />
@@ -60,29 +62,30 @@
     <ClCompile>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\BACFTracker\include;$(ProjectDir)..\AnnotationRecordOperator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SuperResolution;$(ProjectDir)..\BACFTracker;$(ProjectDir)..\AnnotationRecordOperator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ProjectReference />
     <Link />
     <PostBuildEvent />
     <Link>
-      <AssemblyLinkResource>$(OutputPath)AnnotationRecordOperator.dll;$(OutputPath)BACFTracker.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
+      <AssemblyLinkResource>$(OutputPath)AnnotationRecordOperator.dll;$(OutputPath)BACFTracker.dll;$(OutputPath)SuperResolution.dll;$(ProjectDir)..\SuperResolution\single-image-super-resolution-1032.bin;$(ProjectDir)..\SuperResolution\single-image-super-resolution-1032.xml;%(AssemblyLinkResource)</AssemblyLinkResource>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\BACFTracker\include;$(ProjectDir)..\AnnotationRecordOperator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\SuperResolution;$(ProjectDir)..\BACFTracker;$(ProjectDir)..\AnnotationRecordOperator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ProjectReference />
     <Link />
     <Link>
-      <AssemblyLinkResource>$(OutputPath)AnnotationRecordOperator.dll;$(OutputPath)BACFTracker.dll;%(AssemblyLinkResource)</AssemblyLinkResource>
+      <AssemblyLinkResource>$(OutputPath)AnnotationRecordOperator.dll;$(OutputPath)BACFTracker.dll;$(OutputPath)SuperResolution.dll;$(ProjectDir)..\SuperResolution\single-image-super-resolution-1032.bin;$(ProjectDir)..\SuperResolution\single-image-super-resolution-1032.xml;%(AssemblyLinkResource)</AssemblyLinkResource>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="managed_annotation_record_operator.h" />
+    <ClInclude Include="managed_super_resolution.h" />
     <ClInclude Include="managed_tracker.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="utils.h" />
@@ -90,6 +93,7 @@
   <ItemGroup>
     <ClCompile Include="managed_annotaion_record_operator.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="managed_super_resolution.cpp" />
     <ClCompile Include="managed_tracker.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +111,9 @@
     </ProjectReference>
     <ProjectReference Include="..\BACFTracker\BACFTracker.vcxproj">
       <Project>{d2afa27b-73b6-486d-9d41-dbcc8aee22d3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SuperResolution\SuperResolution.vcxproj">
+      <Project>{cf2fbe06-5c65-4f5b-8e5e-20dff67f5df3}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
