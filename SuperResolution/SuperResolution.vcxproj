@@ -22,6 +22,9 @@
     <ProjectReference Include="..\base-libs\vcproj\3rd_party\fmt\fmt.vcxproj">
       <Project>{0648da17-fc38-43ac-9c51-99cd61d46b94}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\base-libs\vcproj\dynamic\base\base.vcxproj">
+      <Project>{34b7c3f3-324a-4370-963e-8725df78c145}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\base-libs\vcproj\dynamic\base\logging\logging.vcxproj">
       <Project>{dd05e230-eb4d-4507-93f7-e3a3ba7e8e7e}</Project>
     </ProjectReference>

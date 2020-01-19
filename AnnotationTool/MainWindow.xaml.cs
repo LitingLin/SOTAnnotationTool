@@ -22,6 +22,7 @@ using Xceed.Wpf.Toolkit;
 using MessageBox = System.Windows.MessageBox;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows.Interop;
 using AnnotationTool.Data;
 using AnnotationTool.Data.Model;
 using AnnotationTool.NativeInteropServices;
@@ -182,7 +183,22 @@ namespace AnnotationTool
             OpenFrame(0);
         }
 
-        private int _boundaryPixelPercent = 20;
+        private int _currentTargetViewContextPercent = 20;
+        public Size GetElementPixelSize(UIElement element)
+        {
+            Matrix transformToDevice;
+            var source = PresentationSource.FromVisual(element);
+            if (source != null)
+                transformToDevice = source.CompositionTarget.TransformToDevice;
+            else
+                using (var hwndSource = new HwndSource(new HwndSourceParameters()))
+                    transformToDevice = hwndSource.CompositionTarget.TransformToDevice;
+
+            if (element.DesiredSize == new Size())
+                element.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            return (Size)transformToDevice.Transform((Vector)element.DesiredSize);
+        }
 
         void DrawCurrentTarget()
         {
@@ -197,11 +213,13 @@ namespace AnnotationTool
                 CurrentTargetCanvas.Children.Clear();
                 return;
             }
-            
-            int new_x = x - w * _boundaryPixelPercent / 100;
-            int new_y = y - h * _boundaryPixelPercent / 100;
-            int new_w = w + w * _boundaryPixelPercent / 100 * 2;
-            int new_h = h + h * _boundaryPixelPercent / 100 * 2;
+
+            var viewPixelSize = GetElementPixelSize(CurrentTargetViewbox);
+
+            int new_x = x - w * _currentTargetViewContextPercent / 100;
+            int new_y = y - h * _currentTargetViewContextPercent / 100;
+            int new_w = w + w * _currentTargetViewContextPercent / 100 * 2;
+            int new_h = h + h * _currentTargetViewContextPercent / 100 * 2;
             if (new_x < 0) new_x = 0;
             if (new_y < 0) new_y = 0;
             if (new_x + new_w >= _currentImage.PixelWidth) new_w = _currentImage.PixelWidth - new_x;

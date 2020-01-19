@@ -1,10 +1,11 @@
 #ifndef COMPLEX_MAT_HPP_213123048309482094
 #define COMPLEX_MAT_HPP_213123048309482094
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/mat.hpp>
 #include <vector>
 #include <algorithm>
 #include <functional>
+#include <complex>
 
 template<typename T> class ComplexMat_
 {

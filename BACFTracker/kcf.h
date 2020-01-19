@@ -1,7 +1,7 @@
 #ifndef KCF_HEADER_6565467831231
 #define KCF_HEADER_6565467831231
 
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/mat.hpp>
 #include <vector>
 #include "complexmat.hpp"
 
