@@ -197,7 +197,7 @@ namespace AnnotationTool
                 CurrentTargetCanvas.Children.Clear();
                 return;
             }
-
+            
             int new_x = x - w * _boundaryPixelPercent / 100;
             int new_y = y - h * _boundaryPixelPercent / 100;
             int new_w = w + w * _boundaryPixelPercent / 100 * 2;

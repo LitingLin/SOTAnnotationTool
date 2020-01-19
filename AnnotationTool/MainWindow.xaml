@@ -58,7 +58,7 @@
                     </GroupBox>
                     <GridSplitter Grid.Row="2" Grid.Column="1" Width="5" ResizeDirection="Columns" HorizontalAlignment="Stretch" ></GridSplitter>
                     <GroupBox Grid.Row="2" Grid.Column="2" Header="当前物体">
-                        <Viewbox Stretch="Uniform">
+                        <Viewbox Name="CurrentTargetViewbox"  Stretch="Uniform">
                             <Canvas Name="CurrentTargetCanvas"></Canvas>
                         </Viewbox>
                     </GroupBox>
