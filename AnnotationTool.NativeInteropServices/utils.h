@@ -11,6 +11,10 @@ catch (std::exception & exp) \
 { \
 	throw gcnew System::Exception(msclr::interop::marshal_as<System::String^>(exp.what())); \
 } \
+catch (System::Exception^ exp) \
+{ \
+	throw exp; \
+} \
 catch (...) \
 { \
 	throw gcnew System::Exception(); \

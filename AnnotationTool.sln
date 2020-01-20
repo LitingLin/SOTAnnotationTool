@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SuperResolutionAlgorithmVis
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenVINOTest", "OpenVINOTest\OpenVINOTest.vcxproj", "{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AnnotationToolNativeHelpers", "AnnotationToolNativeHelpers\AnnotationToolNativeHelpers.vcxproj", "{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,14 @@ Global
 		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x64.ActiveCfg = Release|x64
 		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x64.Build.0 = Release|x64
 		{F358CBEC-418F-4B9E-9B70-F3F985E7E6A2}.Release|x86.ActiveCfg = Release|x64
+		{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}.Debug|x64.ActiveCfg = Debug|x64
+		{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}.Debug|x64.Build.0 = Debug|x64
+		{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}.Debug|x86.ActiveCfg = Debug|x64
+		{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}.Release|Any CPU.ActiveCfg = Release|x64
+		{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}.Release|x64.ActiveCfg = Release|x64
+		{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}.Release|x64.Build.0 = Release|x64
+		{BE9EAD40-0126-488F-A6BB-FC40DCA5BAF4}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

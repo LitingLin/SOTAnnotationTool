@@ -184,22 +184,22 @@ namespace AnnotationTool
         }
 
         private int _currentTargetViewContextPercent = 20;
-        public Size GetElementPixelSize(UIElement element)
+        public static BitmapSource FromArray(byte[] data, int w, int h, int ch)
         {
-            Matrix transformToDevice;
-            var source = PresentationSource.FromVisual(element);
-            if (source != null)
-                transformToDevice = source.CompositionTarget.TransformToDevice;
-            else
-                using (var hwndSource = new HwndSource(new HwndSourceParameters()))
-                    transformToDevice = hwndSource.CompositionTarget.TransformToDevice;
+            PixelFormat format = PixelFormats.Default;
 
-            if (element.DesiredSize == new Size())
-                element.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            if (ch == 1) format = PixelFormats.Gray8; //grey scale image 0-255
+            if (ch == 3) format = PixelFormats.Bgr24; //RGB
+            if (ch == 4) format = PixelFormats.Bgr32; //RGB + alpha
 
-            return (Size)transformToDevice.Transform((Vector)element.DesiredSize);
+
+            WriteableBitmap wbm = new WriteableBitmap(w, h, 96, 96, format, null);
+            wbm.WritePixels(new Int32Rect(0, 0, w, h), data, ch * w, 0);
+
+            return wbm;
         }
 
+        private DrawCurrentTargetNativeHelper _drawCurrentTargetNativeHelper = new DrawCurrentTargetNativeHelper();
         void DrawCurrentTarget()
         {
             int x = viewModel.X;
@@ -213,38 +213,43 @@ namespace AnnotationTool
                 CurrentTargetCanvas.Children.Clear();
                 return;
             }
-
-            var viewPixelSize = GetElementPixelSize(CurrentTargetViewbox);
-
-            int new_x = x - w * _currentTargetViewContextPercent / 100;
-            int new_y = y - h * _currentTargetViewContextPercent / 100;
-            int new_w = w + w * _currentTargetViewContextPercent / 100 * 2;
-            int new_h = h + h * _currentTargetViewContextPercent / 100 * 2;
-            if (new_x < 0) new_x = 0;
-            if (new_y < 0) new_y = 0;
-            if (new_x + new_w >= _currentImage.PixelWidth) new_w = _currentImage.PixelWidth - new_x;
-            if (new_y + new_h >= _currentImage.PixelHeight) new_h = _currentImage.PixelHeight - new_y;
-
+            PresentationSource source = PresentationSource.FromVisual(CurrentTargetViewbox);
+            
+            var viewPixelSize = source.CompositionTarget.TransformToDevice.Transform(new Vector(CurrentTargetViewbox.ActualWidth,
+                CurrentTargetViewbox.ActualHeight));
+            if (viewPixelSize.X <= 0.0 || viewPixelSize.Y <= 0.0)
+                return;
+            var result= 
+                _drawCurrentTargetNativeHelper.update(Convert.ToUInt64(Math.Round(viewPixelSize.X)),
+                Convert.ToUInt64(Math.Round(viewPixelSize.Y)),
+                (ulong)x, (ulong)y, (ulong)w, (ulong)h, 
+                (double)_currentTargetViewContextPercent / 100.0);
+            
             CurrentTargetCanvas.Children.Clear();
-            CroppedBitmap currentTargetImage = new CroppedBitmap(_currentImage, new Int32Rect(new_x, new_y, new_w, new_h));
+            var currentTargetImage = FromArray(result.image, (int)result.imageWidth, (int)result.imageHeight, 3);
 
-            CurrentTargetCanvas.Width = new_w;
-            CurrentTargetCanvas.Height = new_h;
+            CurrentTargetCanvas.Width = result.imageWidth;
+            CurrentTargetCanvas.Height = (int)result.imageHeight;
             CurrentTargetCanvas.Background = new ImageBrush(currentTargetImage);
             Rectangle rectangle = new Rectangle();
-            rectangle.Width = w;
-            rectangle.Height = h;
+            rectangle.Width = result.width;
+            rectangle.Height = result.height;
             rectangle.Stroke = new SolidColorBrush(Colors.Red);
-            rectangle.StrokeThickness = 1;
+            rectangle.Opacity = 0.4;
+            rectangle.StrokeThickness = result.scalingRatio;
             CurrentTargetCanvas.Children.Add(rectangle);
-            Canvas.SetLeft(rectangle, x - new_x);
-            Canvas.SetTop(rectangle, y - new_y);
+            Canvas.SetLeft(rectangle, result.x);
+            Canvas.SetTop(rectangle, result.y);
         }
 
         private byte[] _bgrRawPixelCache = null;
-        private int _bgrRawPixelCacheSize;
+        private int _bgrRawPixelCacheSize = 0;
+        private BitmapImage _lastDecodedImage = null;
         private byte[] DecodeImage(BitmapImage image)
         {
+            if (_lastDecodedImage == image)
+                return _bgrRawPixelCache;
+
             FormatConvertedBitmap convertedBitmap = new FormatConvertedBitmap(image, PixelFormats.Bgr24, null, 0);
             int bytesPerPixel = (convertedBitmap.Format.BitsPerPixel + 7) / 8;
             int requiredCacheSize = bytesPerPixel * convertedBitmap.PixelWidth * convertedBitmap.PixelHeight;
@@ -256,6 +261,8 @@ namespace AnnotationTool
 
             Int32Rect rect = new Int32Rect(0, 0, convertedBitmap.PixelWidth, convertedBitmap.PixelHeight);
             convertedBitmap.CopyPixels(rect, _bgrRawPixelCache, bytesPerPixel * convertedBitmap.PixelWidth, 0);
+
+            _lastDecodedImage = image;
 
             return _bgrRawPixelCache;
         }
@@ -460,6 +467,7 @@ namespace AnnotationTool
             if (viewModel.W > 0 && viewModel.H > 0)
                 _selectiveBoxCanvas.Create(new Rect(viewModel.X, viewModel.Y, viewModel.W, viewModel.H));
 
+            _drawCurrentTargetNativeHelper.initialize(DecodeImage(_currentImage), Convert.ToUInt64(_currentImage.PixelWidth), Convert.ToUInt64(_currentImage.PixelHeight));
             DrawCurrentTarget();
 
             SetMaximumValue();
@@ -617,7 +625,24 @@ namespace AnnotationTool
                 RetrackEvent();
             else if (e.Key == Key.C)
                 CopyLastFrame();
+            else if (e.Key == Key.OemPlus || e.Key == Key.Add)
+                CurrentTargetContextPlus();
+            else if (e.Key == Key.OemMinus || e.Key == Key.Subtract)
+                CurrentTargetContextMinus();
             e.Handled = true;
+        }
+
+        private void CurrentTargetContextPlus()
+        {
+            _currentTargetViewContextPercent += 5;
+            DrawCurrentTarget();
+        }
+
+        private void CurrentTargetContextMinus()
+        {
+            if (_currentTargetViewContextPercent >= 5)
+                _currentTargetViewContextPercent -= 5;
+            DrawCurrentTarget();
         }
 
         private bool _shapeTextBoxIsModifiedByUser = true;
