@@ -79,6 +79,8 @@ namespace AnnotationTool
             viewModel.KeyOfReTrack = "R";
             viewModel.KeyOfCopyLastFrame = "C";
             viewModel.KeyOfDeleteRecord = "退格键←";
+            viewModel.KeyOfZoomIn = "+";
+            viewModel.KeyOfZoomOut = "-";
         }
 
         private void TextBoxDatasetFilePath_OnGotFocus(object sender, RoutedEventArgs e)
@@ -626,9 +628,9 @@ namespace AnnotationTool
             else if (e.Key == Key.C)
                 CopyLastFrame();
             else if (e.Key == Key.OemPlus || e.Key == Key.Add)
-                CurrentTargetContextPlus();
-            else if (e.Key == Key.OemMinus || e.Key == Key.Subtract)
                 CurrentTargetContextMinus();
+            else if (e.Key == Key.OemMinus || e.Key == Key.Subtract)
+                CurrentTargetContextPlus();
             e.Handled = true;
         }
 

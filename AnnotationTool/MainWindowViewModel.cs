@@ -699,5 +699,34 @@ namespace AnnotationTool
         }
 
         private string _keyOfDeleteRecord;
+
+        public string KeyOfZoomIn
+        {
+            get { return _keyOfZoomIn; }
+            set
+            {
+                if (_keyOfZoomIn != value)
+                {
+                    _keyOfZoomIn = value;
+                    OnPropertyChanged("KeyOfZoomIn");
+                }
+            }
+        }
+
+        private string _keyOfZoomIn;
+        public string KeyOfZoomOut
+        {
+            get { return _keyOfZoomOut; }
+            set
+            {
+                if (_keyOfZoomOut != value)
+                {
+                    _keyOfZoomOut = value;
+                    OnPropertyChanged("KeyOfZoomOut");
+                }
+            }
+        }
+
+        private string _keyOfZoomOut;
     }
 }

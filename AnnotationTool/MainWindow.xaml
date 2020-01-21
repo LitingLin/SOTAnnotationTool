@@ -65,15 +65,17 @@
                     <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
                         <TextBlock>
                             <TextBlock.Text>
-                                <MultiBinding StringFormat="位置：上：{0}，下：{1}，左：{2}，右：{3}；范围：垂直增大：{4}，垂直减小：{5}，水平增大：{6}，水平减小：{7}">
-                                <Binding Path="KeyOfMoveUp"></Binding>
-                                <Binding Path="KeyOfMoveDown"></Binding>
-                                <Binding Path="KeyOfMoveLeft"></Binding>
-                                <Binding Path="KeyOfMoveRight"></Binding>
-                                <Binding Path="KeyOfExpandUpDown"></Binding>
-                                <Binding Path="KeyOfShrinkUpDown"></Binding>
-                                <Binding Path="KeyOfExpandLeftRight"></Binding>
-                                <Binding Path="KeyOfShinkLeftRight"></Binding>
+                                <MultiBinding StringFormat="位置：上：{0}，下：{1}，左：{2}，右：{3}；范围：垂直增大：{4}，垂直减小：{5}，水平增大：{6}，水平减小：{7}，Zoom in：{8}，Zoom out：{9}">
+                                    <Binding Path="KeyOfMoveUp"></Binding>
+                                    <Binding Path="KeyOfMoveDown"></Binding>
+                                    <Binding Path="KeyOfMoveLeft"></Binding>
+                                    <Binding Path="KeyOfMoveRight"></Binding>
+                                    <Binding Path="KeyOfExpandUpDown"></Binding>
+                                    <Binding Path="KeyOfShrinkUpDown"></Binding>
+                                    <Binding Path="KeyOfExpandLeftRight"></Binding>
+                                    <Binding Path="KeyOfShinkLeftRight"></Binding>
+                                    <Binding Path="KeyOfZoomIn"></Binding>
+                                    <Binding Path="KeyOfZoomOut"></Binding>
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>

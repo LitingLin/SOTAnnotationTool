@@ -33,9 +33,6 @@ size_t, size_t, size_t, size_t> DrawCurrentTargetNativeHelper::update(size_t win
 
 	double windowElementXYRatio = (double)windowElementPixelWidth / (double)windowElementPixelHeight;
 
-	cropWidth = boundingBoxWithContextWidth;
-	cropHeight = boundingBoxWithContextHeight;
-	
 	if (double(windowElementPixelWidth) / boundingBoxWithContextWidth > double(windowElementPixelHeight) / boundingBoxWithContextHeight)
 	{
 		cropWidth = std::round(boundingBoxWithContextHeight * windowElementXYRatio);
@@ -53,15 +50,7 @@ size_t, size_t, size_t, size_t> DrawCurrentTargetNativeHelper::update(size_t win
 	
 	cropX = (double)boundingBoxX - boundingBoxContextSizeX;
 	cropY = (double)boundingBoxY - boundingBoxContextSizeY;
-
-	cropX = std::round(cropX);
-	cropY = std::round(cropY);
-	cropWidth = std::round(cropWidth);
-	cropHeight = std::round(cropHeight);
-
-	L_ENSURE_GT(cropWidth, 0);
-	L_ENSURE_GT(cropHeight, 0);
-	
+		
 	size_t quantifiedCropWidth = (size_t)cropWidth;
 	size_t quantifiedCropHeight = (size_t)cropHeight;
 
@@ -112,10 +101,7 @@ size_t, size_t, size_t, size_t> DrawCurrentTargetNativeHelper::update(size_t win
 	{
 		sourceCropHeight = cropY + cropHeight - sourceCropY;
 	}
-
-	L_ENSURE_LE(destinationCropX + sourceCropWidth, sourceImageWidth);
-	L_ENSURE_LE(destinationCropY + sourceCropHeight, sourceImageHeight);
-	
+		
 	if (quantifiedCropWidth > windowElementPixelWidth || quantifiedCropHeight > windowElementPixelHeight)
 	{
 		auto superResolutionRatio = _superResolution.scalingRatio();
