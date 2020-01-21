@@ -19,7 +19,7 @@ struct BBox_c
 
     inline cv::Rect get_rect()
     {
-        return cv::Rect(cx-w/2., cy-h/2., w, h);
+        return cv::Rect((int)std::round(cx-w/2.), (int)std::round(cy-h/2.), (int)std::round(w), (int)std::round(h));
     }
 
 };
