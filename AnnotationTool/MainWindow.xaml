@@ -65,7 +65,7 @@
                     <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
                         <TextBlock>
                             <TextBlock.Text>
-                                <MultiBinding StringFormat="保持输入法关闭状态 X+: {0}, X-: {1}, Y+: {2}, Y-: {3}, W+: {4}, W-: {5}, H+: {6}, H-: {7}, Zoom in: {8}, Zoom out: {9}">
+                                <MultiBinding StringFormat="保持输入法关闭状态 Y-: {0}, Y+: {1}, X-: {2}, X+: {3}, H+: {4}, H-: {5}, W-: {6}, W+: {7}, Zoom in: {8}, Zoom out: {9}">
                                     <Binding Path="KeyOfMoveUp"></Binding>
                                     <Binding Path="KeyOfMoveDown"></Binding>
                                     <Binding Path="KeyOfMoveLeft"></Binding>
