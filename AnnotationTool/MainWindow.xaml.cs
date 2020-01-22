@@ -336,20 +336,35 @@ namespace AnnotationTool
                     sourceCropHeight = (int)(cropY + cropHeight - sourceCropY);
                 }
 
-                WriteableBitmap writableBitmap = new WriteableBitmap(quantifiedCropWidth, quantifiedCropHeight, _currentImage.DpiX, _currentImage.DpiY, _currentImage.Format, _currentImage.Palette);
-
-                // Stride = (width) x (bytes per pixel)
-                int stride = sourceCropWidth * (_currentImage.Format.BitsPerPixel / 8);
-                byte[] pixels = new byte[sourceCropHeight * stride];
-                _currentImage.CopyPixels(new Int32Rect(sourceCropX, sourceCropY, sourceCropWidth, sourceCropHeight), pixels, stride, 0);
-                writableBitmap.WritePixels(new Int32Rect(destinationCropX, destinationCropY, sourceCropWidth, sourceCropHeight), pixels, stride, 0);
-
 
                 CurrentTargetCanvas.Children.Clear();
 
                 CurrentTargetCanvas.Width = quantifiedCropWidth;
                 CurrentTargetCanvas.Height = quantifiedCropHeight;
-                CurrentTargetCanvas.Background = new ImageBrush(writableBitmap);
+
+                if (destinationCropX == 0 && destinationCropY == 0 && sourceCropWidth == quantifiedCropWidth &&
+                    sourceCropHeight == quantifiedCropHeight)
+                {
+                    CroppedBitmap currentTargetImage = new CroppedBitmap(_currentImage, new Int32Rect(sourceCropX, sourceCropY, sourceCropWidth, sourceCropHeight));
+                    
+                    CurrentTargetCanvas.Background = new ImageBrush(currentTargetImage);
+                }
+                else
+                {
+                    WriteableBitmap writableBitmap = new WriteableBitmap(quantifiedCropWidth, quantifiedCropHeight,
+                        _currentImage.DpiX, _currentImage.DpiY, _currentImage.Format, _currentImage.Palette);
+
+                    // Stride = (width) x (bytes per pixel)
+                    int stride = sourceCropWidth * (_currentImage.Format.BitsPerPixel / 8);
+                    byte[] pixels = new byte[sourceCropHeight * stride];
+                    _currentImage.CopyPixels(new Int32Rect(sourceCropX, sourceCropY, sourceCropWidth, sourceCropHeight),
+                        pixels, stride, 0);
+                    writableBitmap.WritePixels(
+                        new Int32Rect(destinationCropX, destinationCropY, sourceCropWidth, sourceCropHeight), pixels,
+                        stride, 0);
+                    CurrentTargetCanvas.Background = new ImageBrush(writableBitmap);
+                }
+
                 Rectangle rectangle = new Rectangle();
                 rectangle.Width = boundingBoxWidth;
                 rectangle.Height = boundingBoxHeight;

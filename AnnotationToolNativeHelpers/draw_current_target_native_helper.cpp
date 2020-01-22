@@ -102,7 +102,7 @@ size_t, size_t, size_t, size_t> DrawCurrentTargetNativeHelper::update(size_t win
 		sourceCropHeight = cropY + cropHeight - sourceCropY;
 	}
 		
-	if (quantifiedCropWidth > windowElementPixelWidth || quantifiedCropHeight > windowElementPixelHeight)
+	if (windowElementPixelWidth > quantifiedCropWidth || windowElementPixelHeight > quantifiedCropHeight)
 	{
 		auto superResolutionRatio = _superResolution.scalingRatio();
 		size_t superResolutionResultWidth = superResolutionRatio * sourceCropWidth;
