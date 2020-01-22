@@ -201,7 +201,7 @@ namespace AnnotationTool
             return wbm;
         }
 
-        private DrawCurrentTargetNativeHelper _drawCurrentTargetNativeHelper = new DrawCurrentTargetNativeHelper();
+        private DrawCurrentTargetNativeHelper _drawCurrentTargetNativeHelper = null;
         void DrawCurrentTarget()
         {
             int x = viewModel.X;
@@ -221,27 +221,146 @@ namespace AnnotationTool
                 CurrentTargetViewbox.ActualHeight));
             if (viewPixelSize.X <= 0.0 || viewPixelSize.Y <= 0.0)
                 return;
-            var result= 
-                _drawCurrentTargetNativeHelper.update(Convert.ToUInt64(Math.Round(viewPixelSize.X)),
-                Convert.ToUInt64(Math.Round(viewPixelSize.Y)),
-                (ulong)x, (ulong)y, (ulong)w, (ulong)h, 
-                (double)_currentTargetViewContextPercent / 100.0);
-            
-            CurrentTargetCanvas.Children.Clear();
-            var currentTargetImage = FromArray(result.image, (int)result.imageWidth, (int)result.imageHeight, 3);
 
-            CurrentTargetCanvas.Width = result.imageWidth;
-            CurrentTargetCanvas.Height = (int)result.imageHeight;
-            CurrentTargetCanvas.Background = new ImageBrush(currentTargetImage);
-            Rectangle rectangle = new Rectangle();
-            rectangle.Width = result.width;
-            rectangle.Height = result.height;
-            rectangle.Stroke = new SolidColorBrush(Colors.Red);
-            rectangle.Opacity = 0.4;
-            rectangle.StrokeThickness = result.scalingRatio;
-            CurrentTargetCanvas.Children.Add(rectangle);
-            Canvas.SetLeft(rectangle, result.x);
-            Canvas.SetTop(rectangle, result.y);
+            if (_drawCurrentTargetNativeHelper != null)
+            {
+                var result =
+                    _drawCurrentTargetNativeHelper.update(Convert.ToUInt64(Math.Round(viewPixelSize.X)),
+                        Convert.ToUInt64(Math.Round(viewPixelSize.Y)),
+                        (ulong) x, (ulong) y, (ulong) w, (ulong) h,
+                        (double) _currentTargetViewContextPercent / 100.0);
+
+                CurrentTargetCanvas.Children.Clear();
+                var currentTargetImage = FromArray(result.image, (int) result.imageWidth, (int) result.imageHeight, 3);
+
+                CurrentTargetCanvas.Width = result.imageWidth;
+                CurrentTargetCanvas.Height = (int) result.imageHeight;
+                CurrentTargetCanvas.Background = new ImageBrush(currentTargetImage);
+                Rectangle rectangle = new Rectangle();
+                rectangle.Width = result.width;
+                rectangle.Height = result.height;
+                rectangle.Stroke = new SolidColorBrush(Colors.Red);
+                rectangle.Opacity = 0.4;
+                rectangle.StrokeThickness = result.scalingRatio;
+                CurrentTargetCanvas.Children.Add(rectangle);
+                Canvas.SetLeft(rectangle, result.x);
+                Canvas.SetTop(rectangle, result.y);
+            }
+            else
+            {
+                double windowElementPixelWidth = viewPixelSize.X;
+                double windowElementPixelHeight = viewPixelSize.Y;
+                int boundingBoxX = x;
+                int boundingBoxY = y;
+                int boundingBoxWidth = w;
+                int boundingBoxHeight = h;
+
+
+                double cropX, cropY, cropWidth, cropHeight;
+
+                double context = (double)_currentTargetViewContextPercent / 100.0;
+                double boundingBoxContextSizeX = Math.Round((double)boundingBoxWidth * context);
+                double boundingBoxContextSizeY = Math.Round(((double)boundingBoxHeight * context));
+
+                double boundingBoxWithContextWidth = (double)boundingBoxWidth + 2.0 * boundingBoxContextSizeX;
+                double boundingBoxWithContextHeight = (double)boundingBoxHeight + 2.0 * boundingBoxContextSizeY;
+
+                double windowElementXYRatio = (double)windowElementPixelWidth / (double)windowElementPixelHeight;
+
+                if (windowElementPixelWidth / boundingBoxWithContextWidth > windowElementPixelHeight / boundingBoxWithContextHeight)
+                {
+                    cropWidth = Math.Round(boundingBoxWithContextHeight * windowElementXYRatio);
+                    cropHeight = boundingBoxWithContextHeight;
+
+                    boundingBoxContextSizeX = Math.Round((cropWidth - (double)boundingBoxWidth) / 2.0);
+                }
+                else
+                {
+                    cropWidth = boundingBoxWithContextWidth;
+                    cropHeight = Math.Round(boundingBoxWithContextWidth / windowElementXYRatio);
+
+                    boundingBoxContextSizeY = Math.Round((cropHeight - (double)boundingBoxHeight) / 2.0);
+                }
+
+                cropX = (double)boundingBoxX - boundingBoxContextSizeX;
+                cropY = (double)boundingBoxY - boundingBoxContextSizeY;
+
+                int quantifiedCropWidth = (int)cropWidth;
+                int quantifiedCropHeight = (int)cropHeight;
+
+                int quantifiedContextWidth = (int)((double)boundingBoxX - cropX);
+                int quantifiedContextHeight = (int)((double)boundingBoxY - cropY);
+
+                int sourceCropX, sourceCropY, sourceCropWidth, sourceCropHeight;
+                int destinationCropX, destinationCropY;
+
+                int sourceImageWidth = _currentImage.PixelWidth;
+                int sourceImageHeight = _currentImage.PixelHeight;
+
+                if (cropX < 0)
+                {
+                    sourceCropX = 0;
+                    destinationCropX = (int)(-cropX);
+                }
+                else
+                {
+                    sourceCropX = (int)cropX;
+                    destinationCropX = 0;
+                }
+
+                if (cropY < 0)
+                {
+                    sourceCropY = 0;
+                    destinationCropY = (int)(-cropY);
+                }
+                else
+                {
+                    sourceCropY = (int)cropY;
+                    destinationCropY = 0;
+                }
+
+                if (cropX + cropWidth > sourceImageWidth)
+                {
+                    sourceCropWidth = sourceImageWidth - sourceCropX;
+                }
+                else
+                {
+                    sourceCropWidth = (int)(cropX + cropWidth - sourceCropX);
+                }
+                if (cropY + cropHeight > sourceImageHeight)
+                {
+                    sourceCropHeight = sourceImageHeight - sourceCropY;
+                }
+                else
+                {
+                    sourceCropHeight = (int)(cropY + cropHeight - sourceCropY);
+                }
+
+                WriteableBitmap writableBitmap = new WriteableBitmap(quantifiedCropWidth, quantifiedCropHeight, _currentImage.DpiX, _currentImage.DpiY, _currentImage.Format, _currentImage.Palette);
+
+                // Stride = (width) x (bytes per pixel)
+                int stride = sourceCropWidth * (_currentImage.Format.BitsPerPixel / 8);
+                byte[] pixels = new byte[sourceCropHeight * stride];
+                _currentImage.CopyPixels(new Int32Rect(sourceCropX, sourceCropY, sourceCropWidth, sourceCropHeight), pixels, stride, 0);
+                writableBitmap.WritePixels(new Int32Rect(destinationCropX, destinationCropY, sourceCropWidth, sourceCropHeight), pixels, stride, 0);
+
+
+                CurrentTargetCanvas.Children.Clear();
+
+                CurrentTargetCanvas.Width = quantifiedCropWidth;
+                CurrentTargetCanvas.Height = quantifiedCropHeight;
+                CurrentTargetCanvas.Background = new ImageBrush(writableBitmap);
+                Rectangle rectangle = new Rectangle();
+                rectangle.Width = boundingBoxWidth;
+                rectangle.Height = boundingBoxHeight;
+                rectangle.Stroke = new SolidColorBrush(Colors.Red);
+                rectangle.Opacity = 0.4;
+                rectangle.StrokeThickness = 1;
+                CurrentTargetCanvas.Children.Add(rectangle);
+                Canvas.SetLeft(rectangle, quantifiedContextWidth);
+                Canvas.SetTop(rectangle, quantifiedContextHeight);
+            }
+
         }
 
         private byte[] _bgrRawPixelCache = null;
@@ -370,7 +489,10 @@ namespace AnnotationTool
             }
         }
 
-
+        private void SuperResolutionInitializeWithCurrentFrame()
+        {
+            _drawCurrentTargetNativeHelper.initialize(DecodeImage(_currentImage), Convert.ToUInt64(_currentImage.PixelWidth), Convert.ToUInt64(_currentImage.PixelHeight));
+        }
         private void OpenFrame(int index)
         {
             if (_currentIndex.HasValue && _currentIndex.Value == index)
@@ -469,7 +591,8 @@ namespace AnnotationTool
             if (viewModel.W > 0 && viewModel.H > 0)
                 _selectiveBoxCanvas.Create(new Rect(viewModel.X, viewModel.Y, viewModel.W, viewModel.H));
 
-            _drawCurrentTargetNativeHelper.initialize(DecodeImage(_currentImage), Convert.ToUInt64(_currentImage.PixelWidth), Convert.ToUInt64(_currentImage.PixelHeight));
+            if (_drawCurrentTargetNativeHelper != null)
+                SuperResolutionInitializeWithCurrentFrame();
             DrawCurrentTarget();
 
             SetMaximumValue();
@@ -815,6 +938,26 @@ namespace AnnotationTool
         private void DeleteRecordButton_OnClick(object sender, RoutedEventArgs e)
         {
             ClearRecord();
+        }
+
+        private void EnableSuperResolutionAlgorithmButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _drawCurrentTargetNativeHelper = new DrawCurrentTargetNativeHelper();
+            if (_currentImage != null)
+            {
+                SuperResolutionInitializeWithCurrentFrame();
+                DrawCurrentTarget();
+            }
+        }
+
+        private void EnableSuperResolutionAlgorithmButton_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            _drawCurrentTargetNativeHelper.Dispose();
+            _drawCurrentTargetNativeHelper = null;
+            if (_currentImage != null)
+            {
+                DrawCurrentTarget();
+            }
         }
     }
 }

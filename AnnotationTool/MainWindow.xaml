@@ -134,7 +134,7 @@
                         <CheckBox Content="对已标注的记录自动使用跟踪器" IsChecked="{Binding Path=IsUsingTrackerOnAnnotatedRecord}" Focusable="False" Margin="20 0 0 0"></CheckBox>
                         <CheckBox Content="提交时更新res.mat" Focusable="False" IsChecked="{Binding Path=IsUpdateMatlabRecordOnSubmit}"></CheckBox>
                         <CheckBox Content="在程序空闲时更新res.mat" Focusable="False" Margin="20 0 0 0" IsChecked="{Binding Path=IsUpdateMatlabRecordOnAppropriateOpportunity}"></CheckBox>
-
+                        <CheckBox Content="启用超分辨率算法" Focusable="False" Checked="EnableSuperResolutionAlgorithmButton_OnChecked" Unchecked="EnableSuperResolutionAlgorithmButton_OnUnchecked"></CheckBox>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                             <Button Padding="10 0" Content="导入记录" Focusable="False" Click="ImportRecordButton_OnClick"></Button>
                             <Button Padding="10 0" Content="更新res.mat" Focusable="False" Click="UpdateMatlabRecordButton_OnClick"></Button>
